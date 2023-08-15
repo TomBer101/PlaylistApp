@@ -1,0 +1,6 @@
+.playlist-page-container {
+    display: flexbox;
+    flex-direction: column;
+    align-items: center;
+    background-color: '2C3333';
+}
