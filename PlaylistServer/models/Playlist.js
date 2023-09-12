@@ -5,12 +5,7 @@ const playlistSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  songs: [
-    {
-      title: {type: String, required: true},
-      trackId: { type: String, required: true},
-    }
-  ],
+  songs: [ String ],
   edited: {
     type: Boolean,
     default:false,
@@ -26,7 +21,7 @@ const playlistSchema = new mongoose.Schema({
   },
   coverImage: {
      type: String,
-     default: 'http://localhost:5000/images/default.jpg',
+     default: 'http://localhost:3030/images/default.jpg',
     },
     creatorId: {
       type:String,

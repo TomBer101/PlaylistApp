@@ -1,0 +1,36 @@
+.admin-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.3fr 1fr 1fr;
+    grid-template-rows: 0.5fr 1fr 1fr 0.4fr;
+    column-gap: 2em;
+
+    align-items: center;
+    height: 100vh;
+    max-width: 100%;
+
+    grid-template-areas: 
+        "title title title title title"
+        "list list . display display"
+        "list list . display display"
+        ". . . . ."
+    ;
+    
+    min-height: 0;
+}
+
+.title {
+    grid-area: title;
+    display: flex;
+    justify-content: center ;
+}
+
+/* .list {
+    grid-area: list;
+    min-height: 0;
+    height: 100%;
+} */
+
+.display {
+    grid-area: display;
+    grid-column: 4 / 6;
+}

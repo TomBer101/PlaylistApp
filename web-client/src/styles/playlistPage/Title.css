@@ -1,0 +1,24 @@
+.title {
+    position:relative;
+    width: 100%;
+    padding-bottom: 10px;
+    display: block;
+}
+
+.title input {
+    border:0;
+    border-bottom:1px solid #555;  
+    background: #1B2430;
+    width:70%;
+    max-width: 70vh;
+    padding:8px 8px 5px 8px;
+    font-size:32px;
+    color:#fff;
+    margin-top: 3vh;
+}
+
+.title input:focus {
+    border:none;	
+    outline:none;
+    border-bottom:1px solid #7c8595;	
+}

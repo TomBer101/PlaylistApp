@@ -1,0 +1,28 @@
+.list-container {
+    grid-area: list;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    width: 80%;
+    padding: 0 1.8em;
+    margin: 0 3em;
+}
+
+.list-container h2 {
+    display: flex;
+    font-size: 24px;
+    font-weight: bold;
+    justify-content: center;
+    margin-bottom: 0.5em;
+}
+
+.list {
+    flex: 1;
+    list-style: none;
+    padding: 0;
+    overflow-y: auto;
+    margin: 0;
+    margin-bottom: 0.5rem;
+    overflow-x: auto;
+}
