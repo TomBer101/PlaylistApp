@@ -46,7 +46,7 @@ function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPl
 
 
     useEffect(() => {
-        //fetchSongData(songId) //commented to prevent using youtube api when develpoing
+        fetchSongData(songId) //commented to prevent using youtube api when develpoing
     }, [songId])
 
     useEffect(() => {
@@ -82,13 +82,6 @@ function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPl
         }
     }
 
-    async function searchSong(songName) {
-        try {
-            
-        } catch (error) {
-            
-        }
-    }
 
     function handleOnClick() {
         if (editing) {
@@ -191,12 +184,11 @@ function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPl
             onMouseUp={handleOnMouseUp}
             onTouchStart={handleOnTouchStart}
             onTouchEnd={handleOnTouchEnd}
-            onClick={handleOnClick}
         >
                 <div className='image-thumbnail'>
-                    <img src={imagePath} alt='song thumbnail'/>
+                    <img src={imgUrl} alt='song thumbnail'/>
                 </div>
-                <div ref={titleParentRef} className={`song-details ${isTitleScrolling?'scrolling':''}`} >
+                <div ref={titleParentRef} className={`song-details ${isTitleScrolling?'scrolling':''}`}  onClick={handleOnClick}>
                     <div ref={titleRef} className={`song-title ${isTitleExpanded ? 'expanded' : ''}`} onClick={handleClick}>
                         {songTitle}
                     </div>
@@ -207,7 +199,7 @@ function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPl
                 </button>)}
             </div>
             {showGarbageIcon && (
-                <div className='garbage-icon' onClick={() => handleDelete(songId)}>
+                <div className='garbage-icon' onClick={() => {handleDelete(songId); setShowGarbageIcon(false)}}>
                     <FontAwesomeIcon icon={faTrashCan} />
                 </div>
             )}

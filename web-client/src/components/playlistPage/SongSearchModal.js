@@ -52,6 +52,8 @@ function SongSearchModal ({setIsVisible, isVisible, songIndex, handleSongChosing
         console.log('Clicked on item: ', youtubeId);
         handleSongChosing(youtubeId);
         setIsVisible(false);
+        setSearchResult([]);
+        setInputText('');
     }
 
 

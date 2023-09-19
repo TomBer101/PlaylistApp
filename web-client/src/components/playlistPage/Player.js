@@ -8,6 +8,13 @@ import '../../styles/playlistPage/Player.css';
 
 function Player() {
 
+  const opts = {
+    height: "0",
+    width: "0",
+    playerVars: {
+      mute:false,
+    },
+  };
 
   const { playlistId, baseUrl, editing } = usePlaylistContext();
   const [songs, setSongs] = useState([]); 
@@ -15,6 +22,7 @@ function Player() {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0); // the index of the current playing song in the songs
+  // const [optState, setOptState] = useState(opts);
 
   const videoElement = useRef(null);
   const apiKey = process.env.REACT_APP_KEY;
@@ -23,6 +31,11 @@ function Player() {
   useEffect(() => {
     fetchSongs()
   }, [playlistId])
+
+  useEffect(() => {
+    console.log('Current Songs: ', songs);
+    updateSongs();
+  }, [songs])
 
   async function fetchSongs ()  {
     if (playlistId) {
@@ -133,13 +146,12 @@ function Player() {
 
   const handleChoosingSong = (youtubeId) => {
     if (selectedIndex !== -1) {
-          const oldSongs = songs;
-          oldSongs[selectedIndex] = youtubeId
-          setSongs(oldSongs);
-          console.log('Current Songs array: ', songs);
-          updateSongs()
-    }
-
+      setSongs((oldSongs) => {
+        const newSongs = [...oldSongs];
+        newSongs[selectedIndex] = youtubeId;
+        return newSongs;
+      });
+    } 
   }
 
   const updateSongs = async () => {
@@ -177,6 +189,10 @@ function Player() {
     setIsPlaying(!isPlaying);
   }
 
+  useEffect(() => {
+    playVideoById(songs[selectedIndex]);
+  }, [selectedIndex])
+
   const handlePlayPause = (songIndex) => {
     console.log("The song that should be playing is: ", songs[selectedIndex]);
     if (!isPlaying) {
@@ -186,6 +202,12 @@ function Player() {
       setIsPlaying(false);
     } else {
       setSelectedIndex(songIndex);
+    }
+  }
+
+  const playVideoById = (videoId) => {
+    if (videoElement.current) {
+      const player = videoElement.current.loadVideoById(videoId);
     }
   }
 
@@ -199,33 +221,17 @@ function Player() {
     }
   }
 
-  const removeSong = (songId) => {
-    console.log('Old songs: ', songs);
-    const newSongs = songs.map((song) => {
-      if (song === songId) return null;
-      return song;
-    });
-    setSongs(newSongs);
-    console.log('New songs: ', songs);
-    console.log('local new songs: ', newSongs);
-    updateSongs();
+   function  removeSong (songId)  {
+    setSongs(oldSongs => {
+      const newSongs = oldSongs.map((song) => {
+        if (song === songId) return null;
+        return song;
+      })
+      return newSongs;
+    })
   }
 
-  const handlePlaySong = (songBoxIndex) => {
-    if (songBoxIndex == selectedIndex) {
-      setIsPlaying(false)
-    } else {
-      setSelectedIndex(songBoxIndex);
-    }
-  }
 
-  const opts = {
-    height: "0",
-    width: "0",
-    playerVars: {
-      mute:false,
-    },
-  };
 
     return(
       <div className='player-container player'>
@@ -237,12 +243,12 @@ function Player() {
             songIndex={2} handleClick={() => selectSongBox(2)} onClickPlay={()=>handlePlayPause(2)}/>
           <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />
           <button className='save-button' onClick={savePlaylist} hidden={!editing} >Done!</button>
-          {/* <YouTube
-            videoId={songs[selectedIndex]}  
+          <YouTube
             opts={opts}
+            videoId={songs[selectedIndex]}
             onReady={onReady}
             onEnd={playNextSong}
-          /> */}
+          />
       </div>
   
     )
