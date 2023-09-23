@@ -1,0 +1,28 @@
+.container {
+}
+
+h1 {
+    text-align: center;
+}
+
+.signin-login {
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    width: 100%;
+    max-width: 400px;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    justify-content: center;
+
+    align-items: center; /* Center contents horizontally */
+}
+
+.col {
+    justify-content: center;
+}

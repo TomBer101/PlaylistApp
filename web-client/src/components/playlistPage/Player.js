@@ -213,7 +213,9 @@ function Player() {
 
   const savePlaylist = async () => {
     try {
-      const response = await fetch(baseUrl + '/save/' + playlistId);
+      const response = await fetch(baseUrl + '/save/' + playlistId, {
+        method: 'POST',
+      });
       const data = await response.json();
       console.log('Playlist was saved to DB: ',data);
     } catch (error) {
