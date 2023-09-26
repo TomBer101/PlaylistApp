@@ -3,45 +3,19 @@ import { useAdminContext } from "../../pages/AdminPage";
 import '../../styles/adminPage/PlaylistsList.css';
 import PlaylistBlock from "../adminPage/PlaylistBlock";
 
-function PlaylistsList({setSelectedPlaylist}) {
+function PlaylistsList({setSelectedPlaylist, fetchDataIndicator}) {
     const {baseUrl} = useAdminContext();
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // const dummyData = [
-    //     {
-    //         coverImage: '/images/background.jpg',
-    //         name:'my first playlist',
-    //     },
-    //     {
-    //         coverImage: '/images/background.jpg',
-    //         name:'my second playlist',
-    //     },
-    //     {
-    //         coverImage: '/images/background.jpg',
-    //         name:'my third playlist',
-    //     },
-    //     // {
-    //     //     coverImage: '/images/background.jpg',
-    //     //     name:'my fourth playlist',
-    //     // },
-    //     // {
-    //     //     coverImage: '/images/background.jpg',
-    //     //     name:'my fifth playlist',
-    //     // },
-    //     // {
-    //     //     coverImage: '/images/background.jpg',
-    //     //     name:'my harta playlist',
-    //     // },
-    //     // {
-    //     //     coverImage: '/images/background.jpg',
-    //     //     name:'my barta playlist',
-    //     // },
-    // ]
 
     useEffect(() => {
         fetchAllPlaylists();
     }, []);
+
+    useEffect(() => {
+        fetchAllPlaylists();
+    }, [fetchDataIndicator]);
 
     const fetchAllPlaylists = () => {
         fetch(`${baseUrl}/showplaylists`)

@@ -1,45 +1,70 @@
 import React, { useEffect, useState } from "react";
 import { useAdminContext } from "../../pages/AdminPage";
+import { useAuth } from '../../components/auth/AuthContext';
 import '../../styles/adminPage/QrDisplay.css';
 
 
-function QRDisplay({selectedPlaylist, setSelectedPlaylist}) {
+function QRDisplay({selectedPlaylist, setSelectedPlaylist, setUserPlaylist, userplaylist}) {
     const [qrCode, setQRCode] = useState('');
     const {baseUrl} = useAdminContext();
-
-    const dummyData = {
-        qrCodeDummy: '/images/background.jpg',
-        name:'Do Your Thing',
-    }
+    const {user} = useAuth();
 
     useEffect(() => {
         if (selectedPlaylist != null) {
-            setQRCode(selectedPlaylist.qrCode);
+            setQRCode(selectedPlaylist.qr);
             console.log('Displayd QR: ', selectedPlaylist);
         }
     }, [selectedPlaylist]);
 
     const handleGenerateQRClick = async () => {
-        setSelectedPlaylist(null);
-
-        try {
-            const response = await fetch(`${baseUrl}create`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to generate QR playlist");
+        if (!userplaylist) {
+            setSelectedPlaylist(null);
+            try {
+                const response = await fetch(`${baseUrl}create/${user.admin}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                if (!response.ok) {
+                    throw new Error("Failed to generate QR playlist");
+                }
+    
+                const data = await response.json();
+                console.log(data);
+                setQRCode(data.code);
+                setUserPlaylist(data.playlistId)
+            } catch (error) {
+                console.error('Error generating QR code: ', error);
             }
-
-            const data = await response.json();
-            console.log(data);
-            setQRCode(data);
-        } catch (error) {
-            console.error('Error generating QR code: ', error);
+        } else {
+            alert("You already have a playlist in the system. Please, first delete the current one.");
         }
+    }
+
+    const handleDeleteOnClick = async () => {
+        if (userplaylist) {
+            try {
+                const response = await fetch(`${baseUrl}delete/${userplaylist}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: { adminId: user.admin}
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to delete playlist");
+                }
+
+                setQRCode(null);
+                setUserPlaylist(null);
+            }
+            catch (err) {
+            console.log('Error deleiting playlist: ', err);
+        }
+    }
     }
 
     // TODO: fetch all playlists again?
@@ -52,6 +77,12 @@ function QRDisplay({selectedPlaylist, setSelectedPlaylist}) {
             </div>
             <div className="button-container">
                 <button onClick={handleGenerateQRClick}>Generate</button> 
+                <button 
+                    onClick={handleDeleteOnClick} 
+                    disabled={selectedPlaylist && selectedPlaylist.id != userplaylist}
+                    style={{backgroundColor:'red'}} >
+                        Delete
+                </button>
             </div>
         </div>
     )

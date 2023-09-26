@@ -4,8 +4,9 @@ const bcrypt = require('bcrypt')
 
 module.exports.Signup = async (req, res, next) => {
     try{
-        console.log('Try to signup');
+        console.log('In sign up');
         const { email, password } = req.body;
+        console.log(`email: ${email}, pass: ${password}`);
         const existingAdmin = await Admin.findOne({ email });
         if (existingAdmin) {
             return res.json({ message: 'Admin already exists.' });
@@ -26,6 +27,7 @@ module.exports.Signup = async (req, res, next) => {
 
 module.exports.Login = async (req, res, next) => {
     try{
+        console.log('In login.');
         const { email, password } = req.body;
         if (!email || !password) {
             return res.json({ message: 'All fields are requied' });

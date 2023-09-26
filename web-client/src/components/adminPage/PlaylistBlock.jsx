@@ -13,7 +13,12 @@ function PlaylistBlock({playlistInfo, setSelectedPlaylist}) {
             if (!response) throw new Error('Failed to get playlist');
 
             const data = await response.json();
-            setSelectedPlaylist(data);
+            console.log('fetced data: ', data);
+            setSelectedPlaylist({
+                id: playlistInfo._id,
+                qr: data, 
+                name: playlistInfo.name
+            });
         } catch (error) {
             console.error('Error fetching playliat data: ', error);
         }
