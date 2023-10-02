@@ -1,56 +1,63 @@
+require('../utils/oauth');
+const passport = require('passport');
 const Admin = require('../models/Admin');
+
 const { createSecretToken } = require('../utils/SecretToken');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 
 module.exports.Signup = async (req, res, next) => {
     try{
-        console.log('In sign up');
         const { email, password } = req.body;
         console.log(`email: ${email}, pass: ${password}`);
-        const existingAdmin = await Admin.findOne({ email });
-        if (existingAdmin) {
-            return res.json({ message: 'Admin already exists.' });
-        }
 
-        const admin = await Admin.create({ email, password});
-        const token = createSecretToken(admin._id);
-        res.cookie('token', token, {
-            withCredentials: true,
-            httpOnly: false,
+        Admin.register({username: email}, password, function(err, admin) {
+            if(err){
+                console.log("ERROR in singup:" + err);
+                res.status(400).json({url: 'signup', message: 'sign up failed'});
+            } else {
+                passport.authenticate("local")(req, res, function(){
+                    console.log(req.isAuthenticated());
+                    res.status(200).json({url: '/'});
+                });
+            }
         });
-        res.status(201).json({ message: 'Admin signed in successfully', success: true, admin});
-        next();
     } catch (err) {
-        console.error(err);
+        console.error('Error signup: ', err);
     }
-};
+}
 
 module.exports.Login = async (req, res, next) => {
     try{
-        console.log('In login.');
-        const { email, password } = req.body;
-        if (!email || !password) {
-            return res.json({ message: 'All fields are requied' });
-        }
-
-        const admin = await Admin.findOne({ email });
-        if (!admin) {
-            return res.json({ message: 'Incorrect email.'});
-        }
-
-        const auth = await bcrypt.compare(password, admin.password);
-        if (!auth) {
-            return res.json({ message: 'Incorrect password.'});
-        }
-
-        const token = createSecretToken(admin._id);
-        res.cookie("token", token, {
-            withCredentials:true ,
-            httpOnly :false,
+        const admin = new Admin({
+            email: req.body.email,
+            password: req.body.password
         });
-        res.status(201).json({ message: 'Admin loggedd in successfully', success: true});
-        next();
+    
+        req.login(admin, function(err){
+            if(err){
+                console.log("ERROR:" + err);
+                res.send('/login');
+            } else {
+                passport.authenticate("local")(req, res, function(){
+                    res.send('/');
+                });
+            }
+        });
     } catch (err) {
-        console.error(err);
+        console.error('Error login: ', err);
     }
-};
+}
+
+module.exports.Logout = async (req, res, next) => {
+    req.logout((err) => {
+        if(err){
+            console.log("ERROR:" + err);
+        }
+    });
+    res.send('/');
+}
+
+
+
+
+

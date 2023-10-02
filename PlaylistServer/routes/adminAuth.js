@@ -1,16 +1,104 @@
 const express = require('express');
+const passport = require('passport');
 const router = express.Router();
-const { Signup, Login  } = require('../controllers/AuthController');
-const { userVerification } = require('../middlewares//authMiddleware');
+const { Signup, Login, GoogleAuth, GoogleCallback} = require('../controllers/AuthController');
+const { userVerification } = require('../middlewares/authMiddleware');
+const CLIENT_URL = 'http://localhost:3000/'
+
+
+router.get("/login/success", (req, res) => {
+    if (req.user) {
+      res.status(200).json({
+        success: true,
+        message: "successfull",
+        user: req.user,
+        //   cookies: req.cookies
+      });
+    }
+});
+
+router.post("/register", function(req, res){
+    const userName = req.body.email;
+    const password = req.body.password;
+    Admin.register({username: userName}, password, function(err, user) {
+        if(err){
+            console.log("ERROR:" + err);
+            res.redirect('/login/failed');
+        } else {
+            passport.authenticate("local")(req, res, function(){
+                console.log(req.isAuthenticated());
+                res.redirect('/login/failed');
+            });
+        }
+    });
+});
+
+router.post("/login", function(req, res){
+    
+    const admin = new Admin({
+        username: req.body.email,
+        password: req.body.password,
+        
+    });
+
+    req.login(admin, function(err){
+        if(err){
+            console.log("ERROR:" + err);
+            res.redirect('/login/failed');
+        } else {
+            passport.authenticate("local")(req, res, function(){
+                res.redirect('/login/failed');
+            });
+        }
+    });
+
+});
+
+router.get("/login/failed", (req, res) => {
+    res.status(401).json({
+      success: false,
+      message: "failure",
+    });
+});
+
+router.get("/logout", (req, res) => {
+    req.logout();
+    res.redirect(CLIENT_URL);
+});
+
+router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
+
+router.get(
+    "/google/callback",
+    passport.authenticate("google", {
+      successRedirect: CLIENT_URL,
+      failureRedirect: "/login/failed",
+    })
+);
+
+module.exports = router;
+
+
+
 //const Admin = require('../models/Admin');
 //const bcrypt = require('bcrypt');
 //const jwt = require('jsonwebtoken');
 //require("dotenv").config();
 //const requireAuth = require('../middlewares/requireAuth');
 
-router.post('/sign-up', Signup);
-router.post('/log-in', Login);
-router.post('/', userVerification)
+
+
+// router.get('/google', passport.authenticate('google', {scope: ['profile']}));
+// router.get('/auth/google/callaback', passport.authenticate('google'), (req, res) => {
+//     res.status(201).json({ message: 'Admin loggedd in successfully', success: true});
+// });
+// router.get('/auth/google', GoogleAuth);
+// router.get('/google/callback', GoogleCallback);
+// router.get('/google/callback', passport.authenticate('google'), (req, res) => {
+//     res.redirect('/api/admin');
+// });
+
+
 
 // router.post('/sign-up', async (req, res) => {
 //     try {
@@ -71,4 +159,3 @@ router.post('/', userVerification)
 //     res.send(`User: ${req.admin.email} is authorized to make this request`);
 // });
   
-module.exports = router;

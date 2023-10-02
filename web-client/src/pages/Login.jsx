@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import '../styles/auth/LocalAuth.css';
+import GoogleLoginButton from "../components/auth/GoogleLoginButton ";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const handleSubmit = async (e) => {
     try {
 
         const requestBody = JSON.stringify({...inputValue});
-        const response = await fetch("http://localhost:3030/log-in", {
+        const response = await fetch(process.env.REACT_APP_SERVER + "/login", {
             method: "POST", 
             headers: {
                 'Content-Type': 'application/json',
@@ -38,11 +39,9 @@ const handleSubmit = async (e) => {
         }
 
         // console.log('The response: ', await response.json());
-        const {success, message} = await response.json();
-        console.log('Message from login: ',message);
-        if (success) {
+        const data = await response.json();
+        console.log('Message from login: ',data);
             navigate('/');
-        } 
 
      
     } catch (error) {
@@ -80,10 +79,14 @@ const handleSubmit = async (e) => {
           />
         </div>
         <button type="submit">Submit</button>
-        <span>
-          Already have an account? <Link to={"/signup"}>Signup</Link>
-        </span>
       </form>
+      <div className="line"/>
+      <div className="card" style={{marginBottom:'1rem'}}>
+        <GoogleLoginButton />
+      </div>
+      <span >
+        New Here? Click <Link to={"/signup"}>Signup</Link>
+      </span>
     </div>
   );
 };

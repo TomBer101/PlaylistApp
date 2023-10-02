@@ -23,7 +23,7 @@ const Signup = () => {
     e.preventDefault();
     try {
         const requestBody = JSON.stringify({...inputValue});
-        const response = await fetch("http://localhost:3030/sign-up", {
+        const response = await fetch(process.env.REACT_APP_SERVER + "/sign-up", {
             method: "POST", 
             headers: {
                 'Content-Type': 'application/json',
@@ -32,16 +32,13 @@ const Signup = () => {
             credentials: 'include',
         });
 
+        const data = await response.json();
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error(`HTTP error! Status: ${response.status}: ${data.message}`);
         }
 
-        const {success, message} = await response.json();
-        console.log('message' + message);
-        if (success) {
-            console.log('In success.');
-            navigate('/');
-        } 
+        console.log('message' + data);
+            navigate(data.url);
     } catch (error) {
         console.log(error);
     }

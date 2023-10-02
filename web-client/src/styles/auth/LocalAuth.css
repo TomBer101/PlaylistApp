@@ -75,7 +75,6 @@ body {
 }
 
 .form_container > h2 {
-  margin-block: 1rem;
   padding-block: 0.6rem;
   color: rgba(0, 212, 255, 1);
 }
@@ -120,6 +119,12 @@ span a {
   color: rgba(0, 212, 255, 1);
 }
 
+.line {
+  background-color:rgb(87, 85, 114);
+  height: 0.08rem;
+  width: 100%;
+  margin: 2vh 0;
+}
 
 
 

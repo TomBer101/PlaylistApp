@@ -9,6 +9,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  
   const [user, setUser] = useState(null);
   const [cookies, removeCookie] = useCookies();
   const navigate = useNavigate();
@@ -16,14 +17,14 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const verifyCookie = async () => {
       if (!cookies.token) {
-        //navigate('/login');
+        navigate('/login');
         setUser(null);
         return;
       }
 
       try {
         const response = await fetch('http://localhost:3030/', {
-          method: 'POST',
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -34,16 +35,15 @@ export const AuthProvider = ({ children }) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const { status, admin, playlistId } = await response.json();
+        const { status, admin } = await response.json();
 
         if (!status) {
           removeCookie('token');
-          //navigate('/login');
-          //return;
+          navigate('/login');
+          return;
         }
 
-        // Set user data if authenticated
-        setUser({ admin, playlistId });
+        setUser({ admin });
       } catch (error) {
         console.error(error);
       }

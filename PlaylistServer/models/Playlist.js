@@ -23,9 +23,9 @@ const playlistSchema = new mongoose.Schema({
      type: String,
      default: 'http://localhost:3030/images/default.jpg',
     },
-    creatorId: {
-      type:String,
-      default: null
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Admin',
     },
     _id: mongoose.Schema.Types.ObjectId,
 });
@@ -37,7 +37,6 @@ playlistSchema.pre('save', function (next) {
   next();
 });
 
-// Create the shared Playlist model using the schema
 const Playlist = mongoose.model('Playlist', playlistSchema);
 
 // Export the model

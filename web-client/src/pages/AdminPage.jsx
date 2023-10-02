@@ -24,11 +24,9 @@ function AdminPage() {
     return null;
   }
 
-  useEffect(() => {
-    if (user) {
-      setUserPlaylist(user.playlistId);
-    }
-  }, [])
+  // useEffect(() => {
+  //     setUserPlaylist(user.playlistId);
+  // }, [])
 
   // useEffect(() => {
   //   const verifyCookie = async () => {
@@ -77,13 +75,13 @@ function AdminPage() {
         <h1 className="title">Tester</h1>
         <PlaylistsList  
           setSelectedPlaylist={setSelectedPlaylist} 
-          fetchDataIndicator={userplaylist}
+          fetchDataIndicator={user.playlistId}
         />
         <QRDisplay  
           setSelectedPlaylist={setSelectedPlaylist} 
           selectedPlaylist={selectedPlaylist} 
           setUserPlaylist={setUserPlaylist}
-          userplaylist={userplaylist}
+          userplaylist={user.playlistId}
         />
         <button onClick={logout}>LOGOUT</button>
       </div>

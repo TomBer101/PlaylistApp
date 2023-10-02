@@ -258,38 +258,6 @@ function Player() {
   }
 
 
-  // useEffect(() => {
-  //   getLocalIPAddress().then(ipAddress => {
-  //     setLocalIP(ipAddress);
-  //   });
-  // }, []);
-
-
-  // const searchVideos = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `http://${localIP}:4000/search?q=${searchQuery}`
-  //     );
-  //   } catch (error) {
-  //     console.error('Error searching videos: ', error);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   fetch(
-  //     `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PLyOL_RMmwqydRtzTaTuzHc7GCXlAR2aO8&key=${apiKey}&maxResults=1000`,
-  //     {}
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setPlaylist(data.items);
-  //       setLoading(false);
-  //     });
-  // }, []);
-
-
-
 export default Player;
 
 

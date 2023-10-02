@@ -1,26 +1,25 @@
 const mongoose = require('mongoose');
-const bcrypt = require("bcrypt");
+const passportLocalMongoose = require('passport-local-mongoose');
+const findOrCreate = require('mongoose-find-or-create');
+
 
 const adminSchema = new mongoose.Schema({
-    email: {
+    userName: {
         type : String,
-        required : [true, 'Email is required'],
-        unique: true,
     }, 
     password: {
         type :String ,
-        required :[true, 'password is required'],
     },
     playlist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Playlist',
         default: null,
     },
+    googleId: String,
 });
 
-adminSchema.pre('save' , async function() {
-    this.password = await bcrypt.hash(this.password, 12);
-});
+adminSchema.plugin(passportLocalMongoose);
+adminSchema.plugin(findOrCreate);
 
 // Create the shared Playlist model using the schema
 const Admin = mongoose.model('Admin', adminSchema);
