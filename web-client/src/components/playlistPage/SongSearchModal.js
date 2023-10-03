@@ -25,14 +25,21 @@ function SongSearchModal ({setIsVisible, isVisible, songIndex, handleSongChosing
         if (songName != ""){
             try {
             const response =  await fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&type=video&part=snippet&q=${songName}&maxResults=20` );
+
+            if(!response.ok) {
+                alert('YouTube internal Error...');
+            } else {
             const data = await response.json();
             const songs = data.items;
             setSearchResult(songs);
             //setShowResults(true);
             console.log("songs data: ",songs);
             console.log("result data: ",data);
+            }
+
             } catch (error) {
                 console.error('Error fetching songs data: ', error);
+                alert()
             }
         }
         

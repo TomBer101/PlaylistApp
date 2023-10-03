@@ -22,7 +22,6 @@ function Player() {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0); // the index of the current playing song in the songs
-  // const [optState, setOptState] = useState(opts);
 
   const videoElement = useRef(null);
   const apiKey = process.env.REACT_APP_KEY;
@@ -32,10 +31,10 @@ function Player() {
     fetchSongs()
   }, [playlistId])
 
-  useEffect(() => {
-    console.log('Current Songs: ', songs);
-    updateSongs();
-  }, [songs])
+  // useEffect(() => {
+  //   console.log('Current Songs: ', songs);
+  //   updateSongs();
+  // }, [songs])
 
   async function fetchSongs ()  {
     if (playlistId) {
@@ -49,9 +48,6 @@ function Player() {
     }
   }
 
-  // useEffect(() => {
-  //   opts.videoId = songs[selectedIndex]; // Update the video ID based on currentSongIndex
-  // }, [selectedIndex]);
 
   useEffect(() => {
     if (videoElement.current) {
@@ -79,62 +75,10 @@ function Player() {
   }, [isPlaying, videoElement]);
 
 
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     if(videoElement.current && videoElement.current.getCurrentTime() > 0) {
-  //       const elapsed_seconds = videoElement.current.getCurrentTime();
-  //       const elapsed_milliseconds = Math.floor(elapsed_seconds * 1000);
-  //       const ms = elapsed_milliseconds % 1000;
-  //       const min = Math.floor(elapsed_milliseconds / 60000);
-  //       const seconds = Math.floor(
-  //         (elapsed_milliseconds - min * 60000) / 1000
-  //       );
-  //       const formattedCurrentTime =
-  //         min.toString().padStart(2, "0") +
-  //         ":" +
-  //         seconds.toString().padStart(2, "0") +
-  //         ":" +
-  //         ms.toString().padStart(3, "0");
-
-  //       console.log(formattedCurrentTime);
-
-  //       if (videoElement.current.playerInfo.playerState === 1) {
-  //         console.log("the video is running");
-  //       } else if (videoElement.playerInfo.playerState === 2) {
-  //         console.log("the video is paused");
-  //       }
-  //     }
-  //   }, 1000);
-
-    
-  //   return () => {
-  //     clearInterval(interval);
-  //   }
-
-  // }, []);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (videoElement.current && videoElement.current.getCurrentTime() > 0) {
-  //       // Check if the video is near the end and prepare for the next song
-  //       const duration = videoElement.current.getDuration();
-  //       const currentTime = videoElement.current.getCurrentTime();
-  //       if (duration - currentTime < 2) {
-  //         playNextSong();
-  //       }
-  //     }
-  //   }, 1000);
-
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
-
   const playNextSong = () => {
     if (selectedIndex < songs.length - 1 && songs[selectedIndex+1] != null) {
       setSelectedIndex(selectedIndex + 1);
     } else {
-      // Optionally, loop back to the first song
       setSelectedIndex(0);
     }
   };

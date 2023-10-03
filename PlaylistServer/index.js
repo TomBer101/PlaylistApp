@@ -23,6 +23,7 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use('/api/playlists', require('./routes/playlists'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/sse', require('./routes/sse').router);
 
 
 mongoose.connect(process.env.CONNECTION_STRING,{

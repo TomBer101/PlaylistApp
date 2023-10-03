@@ -23,9 +23,6 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
             console.log(selectedImage);
             setImages((prevImages) => [...prevImages, uploadedImage]);
         }
-        //setSekectedImage(uploadedImage)
-        // show another thumbnail with the uploaded image
-        // set the selected image name 
     }
 
     const handleImageClick = (imageName) => {

@@ -11,11 +11,22 @@ function PlaylistsList({setSelectedPlaylist, fetchDataIndicator}) {
 
     useEffect(() => {
         fetchAllPlaylists();
-    }, []);
+    }, [playlists]);
 
+    // useEffect(() => {
+    //     fetchAllPlaylists();
+    // }, [fetchDataIndicator]);
+    
     useEffect(() => {
-        fetchAllPlaylists();
-    }, [fetchDataIndicator]);
+        const eventSource = new EventSource(process.env.REACT_APP_SERVER + '/api/sse/playlistsupdates');
+        eventSource.addEventListener('message', event => {
+            const data = JSON.parse(event.data);
+            console.log('data recieved fro sse: ', data);
+            if (data.type === 'update') {
+                setPlaylists(current => [...current, data.playlistData]);
+            }
+        })
+    }, [])
 
     const fetchAllPlaylists = () => {
         fetch(`${baseUrl}/showplaylists`)

@@ -11,6 +11,7 @@ export const useAdminContext = () => {
 function AdminPage() {
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [fetchIndicator, setFetchIndicator] = useState(false);
+  const [createdQR, setCreatedQR] = useState(null);
 
   const toggleIndicator = () => {
     setFetchIndicator(!fetchIndicator);

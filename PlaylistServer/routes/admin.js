@@ -41,6 +41,7 @@ router.post('/create', async (req, res) => {
         const qrCodeUrl = QRcode.toDataURL(url, async (err, code) => {
             savedPlaylist.qrCode = code;
             await savedPlaylist.save();
+            console.log('Created playlist: ', playlistId);
             res.status(200).json({code, playlistId});
         });
     } catch (error) {
@@ -51,7 +52,7 @@ router.post('/create', async (req, res) => {
 
 router.get('/showplaylists', async (req, res) => {
     try {
-        const playlists = await Playlist.find({}, '_id name coverImage'); 
+        const playlists = await Playlist.find({edited: true}, '_id name coverImage'); 
         res.json(playlists);
     } catch (error) {
         console.error('Error getting all playlists:', error);

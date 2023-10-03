@@ -15,6 +15,7 @@ function QRDisplay({selectedPlaylist, setSelectedPlaylist, alertFetch}) {
     }, [selectedPlaylist]);
 
     const handleGenerateQRClick = async () => {
+        console.log('try to generate');
             try {
                 const response = await fetch(`${baseUrl}/create`, {
                     method: 'POST',

@@ -5,7 +5,10 @@ const path = require('path');
 const fs = require('fs');
 const Playlist = require('../models/Playlist');
 const router = express.Router();
+const events = require('events');
 require('dotenv').config();
+const { playlistUpdateEmitter } = require('./sse');
+
 
 
 router.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
@@ -177,6 +180,13 @@ router.post('/save/:playlistId', async (req, res) => {
 
         playlist.edited = true;
         await playlist.save();
+
+        const message = {
+            name: playlist.name,
+            _id: playlist.id,
+            coverImage: playlist.coverImage
+        };
+        playlistUpdateEmitter.emit('playlist_updated', message);
 
         res.status(200).json({message: 'Playlist was saved.'});
     } catch (error) {
