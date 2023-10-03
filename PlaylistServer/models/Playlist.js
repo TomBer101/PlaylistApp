@@ -23,10 +23,6 @@ const playlistSchema = new mongoose.Schema({
      type: String,
      default: 'http://localhost:3030/images/default.jpg',
     },
-    creator: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Admin',
-    },
     _id: mongoose.Schema.Types.ObjectId,
 });
 

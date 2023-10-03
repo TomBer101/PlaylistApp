@@ -70,13 +70,13 @@
 .empty-song-box {
     display: flex;
     gap: 5px;
-    padding: 8px;
+    padding: 2rem;
     border-bottom:1px solid #555;  
     background: #27374D;    position: relative;
     height: 10%;
     border-radius: 50px;
-    width: 90%;
-    align-items: end;
+    width: 95%;
+    align-items: center;
     justify-content: center;
 }
 

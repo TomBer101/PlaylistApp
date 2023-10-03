@@ -10,6 +10,7 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
     const { playlistId, baseUrl, editing } = usePlaylistContext();
     
     const handleUploadImage = async (event) => {
+        console.log('HEREEEE');
         const file = event.target.files[0];
         if (file) {
             if (uploaded != null) {
@@ -82,15 +83,15 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
                     <button className='close-button' onClick={closeModal}>
                        <FontAwesomeIcon icon={faCircleXmark} />
                     </button>
-                    <div className='images-container' style={{marginTop:'27px'}}>
+                    <div className='images-container ' style={{marginTop:'27px'}}>
                         {images.map((image, index) => (
-                            <div key={index} className={`thumbnail ${selectedImage === image? 'selected' : ''}`}
+                            <div key={index} className={`thumbanil ${selectedImage === image? 'selected' : ''}`}
                              onClick={() => handleImageClick(image)} >
                                 <img key={index}  src={image} alt={`Image ${index}`} />
                             </div>
                         ))}
-                        <label className='upload-button' htmlFor='image-input'> {/* TODO: fix the upload button*/}
-                            <FontAwesomeIcon icon={faSquarePlus} />
+                        <label className='thumbnail' style={{width:'100%'}} > 
+                            <FontAwesomeIcon icon={faSquarePlus} style={{height: '2rem'}}/>
                             <input 
                                 type='file'
                                 name='image'
@@ -101,6 +102,7 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
                             />
                         </label>
                     </div>
+
                 </div>
             </div>
         )

@@ -194,7 +194,7 @@ function Player() {
   }, [selectedIndex])
 
   const handlePlayPause = (songIndex) => {
-    console.log("The song that should be playing is: ", songs[selectedIndex]);
+    console.log("The song that should be playing is: ", selectedIndex);
     if (!isPlaying) {
       setSelectedIndex(songIndex);
       setIsPlaying(true);
@@ -211,17 +211,7 @@ function Player() {
     }
   }
 
-  const savePlaylist = async () => {
-    try {
-      const response = await fetch(baseUrl + '/save/' + playlistId, {
-        method: 'POST',
-      });
-      const data = await response.json();
-      console.log('Playlist was saved to DB: ',data);
-    } catch (error) {
-      console.error('Error fetching playlist data: ', error);
-    }
-  }
+
 
    function  removeSong (songId)  {
     setSongs(oldSongs => {
@@ -244,7 +234,6 @@ function Player() {
           <SongBox key={3} handleDelete={removeSong} songId={songs[2]} isPlaying={(selectedIndex==2) && isPlaying}
             songIndex={2} handleClick={() => selectSongBox(2)} onClickPlay={()=>handlePlayPause(2)}/>
           <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />
-          <button className='save-button' onClick={savePlaylist} hidden={!editing} >Done!</button>
           <YouTube
             opts={opts}
             videoId={songs[selectedIndex]}

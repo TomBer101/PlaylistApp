@@ -20,15 +20,20 @@
 
 .title {
     grid-area: title;
+    margin-top: 1rem;
     display: flex;
     justify-content: center ;
+    color: cadetblue;
+    flex-direction: column;
 }
 
-/* .list {
-    grid-area: list;
-    min-height: 0;
-    height: 100%;
-} */
+.title h1 {
+    color: cadetblue;
+}
+
+.title h5 {
+    color: aliceblue;
+}
 
 .display {
     grid-area: display;

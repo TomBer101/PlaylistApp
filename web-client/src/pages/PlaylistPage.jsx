@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Title from '../components/playlistPage/Title';
 import Image from '../components/playlistPage/Image';
 import Player  from '../components/playlistPage/Player';
@@ -13,16 +13,18 @@ export const usePlaylistContext = () => {
 
 function PlaylistPage() {
     const [playlistData, setPLaylistData] = useState(null);
-    const [myIp, setMyIp] = useState('');
+    const [context, setContext] = useState(false);
+    //const {playlistId} = useParams();
     const location = useLocation();
 
     useEffect(() => {
-      const url = window.location.href;
+      //const url = window.location.href;
       //const ipMatch = url.match(/http:\/\/([\d.]+)/);
       const searchParams = new URLSearchParams(window.location.search);
+      console.log(searchParams);
       const playlistIdParam = searchParams.get('playlistId'); 
-
       if (playlistIdParam) {
+        console.log('playlist id: ', playlistIdParam);
           const base = `http://localhost:3030/api/playlists`;
           fetchPlaylistData(base, playlistIdParam);
       }
@@ -39,6 +41,8 @@ function PlaylistPage() {
       console.error('Error fetching playlist data: ', error);
     }
   };
+
+
 
     // async function fetchPlaylistData(decodedUrl)  {
     //     try {
@@ -94,21 +98,42 @@ function PlaylistPage() {
 
     // }, [location, myIp]);
 
-    const playlistContextValue = {
+    useEffect(()=>{
+      const playlistContextValue = {
         playlistId: playlistData? playlistData.id : null,
         baseUrl: playlistData?playlistData.base: null,
         editing: (playlistData && playlistData.pageType === 'creator'),
         ip: new URLSearchParams(window.location.search).get('ip'),
     };
 
-    console.log('playlist context: ', playlistContextValue);
+    setContext(playlistContextValue);
+    }, [playlistData]);
+
+
+    const savePlaylist = async () => {
+      try {
+        const response = await fetch(context.baseUrl + '/save/' + context.playlistId, {
+          method: 'POST',
+        });
+        const data = await response.json();
+        console.log('Playlist was saved to DB: ',data);
+        setContext({...context, editing:false});
+      } catch (error) {
+        console.error('Error fetching playlist data: ', error);
+      }
+    }
+
+    console.log('playlist context: ', context);
 
   return (
-    <PlaylistContext.Provider value={playlistContextValue}>
+    <PlaylistContext.Provider value={context}>
         <div className="playlist-page-container">
             <Title name={playlistData? playlistData.data.name : ''}/>
             <Image  imageName={playlistData? playlistData.data.coverImage : ''}/>
             <Player  />
+            <div className='save-button'>
+              <button  onClick={savePlaylist} hidden={context && !context.editing} >Done!</button>
+            </div>
         </div>
     </PlaylistContext.Provider>
   );

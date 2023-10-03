@@ -25,6 +25,7 @@ const upload = multer({ storage: storage })
 router.get('/scanned/:entryId', async (req, res) => {
     try {
         const { entryId } = req.params;
+        console.log('Entry ID: ', entryId);
         const playlist = await Playlist.findById(entryId);
         if (!playlist) {
             return res.status(400).json({ error: 'Invalid QR code.'});

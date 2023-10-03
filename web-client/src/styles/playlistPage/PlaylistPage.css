@@ -10,17 +10,45 @@
 
 .title {
     width: 100%;
-    /* flex:0; */
+    flex: 1;
 }
 
 .image {
-    flex: 1 0 0;
-    /* width: 100%; */
+    flex: 3 0 0;
     align-items: center;
     justify-content: center;
 }
 
 .player {
     width: 100%;
-    flex: 4;
+    flex: 3;
 }
+
+.save-button{
+    flex: 2;
+    margin: 1rem;
+}
+
+
+.save-button button{
+    background: #1c2c45;
+    border-radius: 999px;
+    box-shadow: #364967 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: fit-content;
+    word-break: break-word;
+    border: 0;
+    align-self: center;
+    margin-bottom: 25px;
+    }
