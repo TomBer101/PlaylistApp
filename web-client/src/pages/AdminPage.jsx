@@ -17,9 +17,12 @@ function AdminPage() {
     setFetchIndicator(!fetchIndicator);
   }
   
+  console.log('created qr: ', createdQR);
   
   const adminContextValue = {
     baseUrl: 'http://localhost:3030/api/admin', // TODO: localhost should be changed to relevant url
+    selectedPlaylist: selectedPlaylist,
+    createdQR: createdQR,
   };
 
   return (
@@ -30,14 +33,17 @@ function AdminPage() {
           <h5>Welcome to the admin page. Here you can generate QR code, and text my app.</h5>
         </div>
 
-        <PlaylistsList  
-          setSelectedPlaylist={setSelectedPlaylist} 
-          fetchDataIndicator={fetchIndicator}
+        <PlaylistsList 
+          setCreatedQR={setCreatedQR}
+          setSelectedPlaylist={setSelectedPlaylist}
+          //setSelectedPlaylist={setSelectedPlaylist} 
+          // selectedPlaylist={selectedPlaylist}
         />
         <QRDisplay  
-          setSelectedPlaylist={setSelectedPlaylist} 
-          selectedPlaylist={selectedPlaylist} 
-          alertFetch={toggleIndicator}
+          setCreatedQR={setCreatedQR}
+          setSelectedPlaylist={setSelectedPlaylist}
+          //setSelectedPlaylist={setSelectedPlaylist} 
+          //selectedPlaylist={selectedPlaylist} 
         />
       </div>
     </AdminContext.Provider>

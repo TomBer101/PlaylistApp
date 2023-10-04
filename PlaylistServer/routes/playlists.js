@@ -124,8 +124,7 @@ router.post('/change-name/:playlistId', async (req, res) => {
 router.post('/upload-image/:playlistId', upload.single('image'), async (req, res) => {
     try{
         const {playlistId} = req.params;
-        const { name } = req.file;
-
+        
         const playlist = await Playlist.findById(playlistId);
         if (!playlist) {
             return res.status(404).json({error: 'Playlist not found'});
@@ -137,6 +136,7 @@ router.post('/upload-image/:playlistId', upload.single('image'), async (req, res
 
         playlist.coverImage = req.file.filename;
         await playlist.save();
+        res.status(200).json({message: 'I got you image;)'})
 
     } catch (error) {
         console.error(" uploading image: ", error);

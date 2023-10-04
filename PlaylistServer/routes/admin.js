@@ -67,7 +67,7 @@ router.get('/qr-code/:playlistId', async (req, res) => {
             return res.status(404).json({error: 'Playlist not found'});
         }
         console.log('Requested playlist: ', playlist);
-        res.json(playlist);
+        res.json(playlist.qrCode); // was playlist
     } catch (error) {
         console.error(error);
         res.status(500).json({error: "Something went wrong fetching the QR code."});

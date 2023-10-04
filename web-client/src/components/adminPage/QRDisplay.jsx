@@ -3,19 +3,30 @@ import { useAdminContext } from "../../pages/AdminPage";
 import '../../styles/adminPage/QrDisplay.css';
 
 
-function QRDisplay({selectedPlaylist, setSelectedPlaylist, alertFetch}) {
+function QRDisplay({setCreatedQR, setSelectedPlaylist}) {
     const [qrCode, setQRCode] = useState('');
-    const {baseUrl} = useAdminContext();
+    const {baseUrl, selectedPlaylist, createdQR} = useAdminContext();
+    const [currentColor, setCurrentColor] = useState(0);
+
+    const colors = ['#FFBB5C', '#45FFCA', '#D67BFF', '#EA1179', '#A555EC']
 
     useEffect(() => {
         if (selectedPlaylist != null) {
-            setQRCode(selectedPlaylist.qr.qrCode);
-            console.log('Displayd QR: ', selectedPlaylist);
+            setQRCode(selectedPlaylist.qr); 
+        } else if (createdQR != null) {
+            setQRCode(createdQR.code)
         }
-    }, [selectedPlaylist]);
+
+        setCurrentColor(prevColor => {
+            if (prevColor === colors.length - 1) return 0;
+            return (prevColor + 1);
+        });
+    }, [selectedPlaylist, createdQR]);
+
+
 
     const handleGenerateQRClick = async () => {
-        console.log('try to generate');
+        if (!createdQR){
             try {
                 const response = await fetch(`${baseUrl}/create`, {
                     method: 'POST',
@@ -31,26 +42,47 @@ function QRDisplay({selectedPlaylist, setSelectedPlaylist, alertFetch}) {
                 const data = await response.json();
                 console.log(data);
                 setQRCode(data.code);
-                alertFetch();
+                setCreatedQR({
+                    id: data.playlistId,
+                    code: data.code,
+                });
+                setSelectedPlaylist(null);
             } catch (error) {
                 console.error('Error generating QR code: ', error);
             }
+        } else {
+            alert('You did not finish to edit your previous playlist!');
+        }
+
     }
 
+    const showMyQr = () => {
+        setSelectedPlaylist(null);
+        setQRCode(createdQR.code)
+    }
+
+
+    const borderStyle = {
+        borderRadius:'10px',
+        color:colors[currentColor],
+        boxShadow: '0px 2px 14px 2px' + colors[currentColor],
+    }
     
     return (
-        <div className="qr-container">
-            <h2>QR Code</h2>
-            <div className="qr-code">
+        <div className="qr-container" style={ borderStyle} >
+                <h2 >{selectedPlaylist && selectedPlaylist.name != ''?selectedPlaylist.name: ' '}</h2>
+
+            <div className="qr-code" >
                 {qrCode? <img src={qrCode} alt='QR code'/> : 'No QR code generated'}
-                {selectedPlaylist? <p className="playlist-name">{selectedPlaylist.name}</p> : null}
             </div>
-            <div className="button-container">
+            <div className="button-container" >
                 <button onClick={handleGenerateQRClick}>Generate</button> 
+                {createdQR && <button onClick={showMyQr} >Show My QR</button>}
             </div>
         </div>
     )
 
 }
+
 
 export default QRDisplay;

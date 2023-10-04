@@ -29,15 +29,17 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
         handleImageSelected(imageName);
     }
 
-    const closeModal = async () => {
+    const closeModal = async (imageName) => {
         console.log("close modal");
         setIsVisible(false);
+        handleImageSelected(imageName);
         if (selectedImage !== null) {
-            if (selectedImage.startsWith('/images')) {
+            console.log('Selected image: ', imageName);
+            if (imageName.startsWith('/images')) {
                 try {
                     const response = await fetch(baseUrl + `/select-image/${playlistId}`, {
                         method: 'POST',
-                        body: JSON.stringify({imageName: selectedImage}),
+                        body: JSON.stringify({imageName: imageName}),
                         headers:{
                             'Content-Type': 'application/json',
                         },
@@ -49,7 +51,7 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
                     }
                 } catch (error) {
                     console.error(`Error uploading image name : `+ error );
-                    alert('Sending name failed.');
+                    alert('Sending image name failed.');
                 }
 
             } else {
@@ -77,13 +79,11 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
         (
             <div className='image-gallery-container'>
                 <div className='image-gallery-modal'>
-                    <button className='close-button' onClick={closeModal}>
-                       <FontAwesomeIcon icon={faCircleXmark} />
-                    </button>
+
                     <div className='images-container ' style={{marginTop:'27px'}}>
                         {images.map((image, index) => (
                             <div key={index} className={`thumbanil ${selectedImage === image? 'selected' : ''}`}
-                             onClick={() => handleImageClick(image)} >
+                             onClick={() => closeModal(image)} >
                                 <img key={index}  src={image} alt={`Image ${index}`} />
                             </div>
                         ))}

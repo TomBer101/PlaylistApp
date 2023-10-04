@@ -3,30 +3,38 @@ import { useAdminContext } from "../../pages/AdminPage";
 import '../../styles/adminPage/PlaylistsList.css';
 import PlaylistBlock from "../adminPage/PlaylistBlock";
 
-function PlaylistsList({setSelectedPlaylist, fetchDataIndicator}) {
-    const {baseUrl} = useAdminContext();
+function PlaylistsList({setCreatedQR, setSelectedPlaylist}) {
+    const {baseUrl, selectedPlaylist, createdQR} = useAdminContext();
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [eventSource, setEventSource] = useState(null);
 
 
     useEffect(() => {
         fetchAllPlaylists();
-    }, [playlists]);
+    }, []);
 
-    // useEffect(() => {
-    //     fetchAllPlaylists();
-    // }, [fetchDataIndicator]);
     
     useEffect(() => {
-        const eventSource = new EventSource(process.env.REACT_APP_SERVER + '/api/sse/playlistsupdates');
-        eventSource.addEventListener('message', event => {
-            const data = JSON.parse(event.data);
-            console.log('data recieved fro sse: ', data);
-            if (data.type === 'update') {
-                setPlaylists(current => [...current, data.playlistData]);
-            }
-        })
-    }, [])
+            const newEventSource = new EventSource(process.env.REACT_APP_SERVER + '/api/sse/playlistsupdates');
+            newEventSource.addEventListener('message', event => {
+                const data = JSON.parse(event.data);
+                console.log('data recieved fro sse: ', data);
+                if (data.type === 'update') {
+                        setPlaylists(current => [...current, data.playlistData]);
+                        console.log('created qr: ', createdQR);
+                        if (createdQR && data.playlistData._id === createdQR.id) {
+                            console.log('New playlist: ', data.playlistData._id, 'My playlist: ', createdQR.id);
+                            setCreatedQR(null);
+                        }
+                    
+                }
+            });
+
+            return () => {
+                newEventSource.close();
+            };
+    }, [createdQR])
 
     const fetchAllPlaylists = () => {
         fetch(`${baseUrl}/showplaylists`)

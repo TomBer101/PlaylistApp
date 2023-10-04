@@ -2,18 +2,20 @@
     display: flex;
     flex-direction: column;
     grid-area: display;
-    height: 100%;
+    height: 85%;
     min-height: 0;
     padding: 0 1.8em;
     margin: 0 1.5em;
+    width: 80%;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 
 .qr-container h2 {
     display: flex;
-    font-size: 24px;
     font-weight: bold;
-    margin-bottom: 0.5em;
     justify-content: center;
+    flex: 1;
 }
 
 .qr-code {
@@ -26,6 +28,7 @@
     height: calc(100% - 120px);
     max-height: 80%;
     overflow: hidden;
+    flex: 6;
 }
 
 .qr-code img {
@@ -36,22 +39,22 @@
 
 .button-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
+    gap: 8%;
     align-items: flex-start;
-    margin-top: 1px;
+    flex: 1;
 }
 
 .qr-container button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
+    padding: 8px 15px;
+    background-color: #4a5d70;
     color: #fff;
     border: none;
     cursor: pointer;
     font-size: 16px;
-
+    word-wrap: break-word;
+    border-radius: 20px;
+    height: 100%;
+    width: 45%;
 }
 
-.qr-container button:hover {
-    background-color: #0056b3;
-}
