@@ -50,7 +50,6 @@ function PlaylistsList({setCreatedQR, setSelectedPlaylist}) {
         });
     }
 
-    console.log("The list state is: ", playlists);
     return (
         <div className="list-container">
             <h2>Playlists</h2>
