@@ -27,7 +27,7 @@ function getLocalIP() {
   return null;
 }
 
-const localIP = getLocalIP();
+//const localIP = getLocalIP();
 
 router.post('/create', async (req, res) => {
     try {
@@ -36,7 +36,10 @@ router.post('/create', async (req, res) => {
         });
         const savedPlaylist = await newPlaylist.save();
         const playlistId = savedPlaylist._id.toString();
-        const url = `http://${localIP}:3000/playlist-page?playlistId=${playlistId}`;
+        //const url = `http://${localIP}:3000/playlist-page?playlistId=${playlistId}`;
+        const clientDomain = req.headers.origin;
+        const url = `http://${clientDomain}/playlist-page?playlistId=${playlistId}`;
+
 
         const qrCodeUrl = QRcode.toDataURL(url, async (err, code) => {
             savedPlaylist.qrCode = code;

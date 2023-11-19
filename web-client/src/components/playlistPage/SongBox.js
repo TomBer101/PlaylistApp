@@ -5,16 +5,15 @@ import { usePlaylistContext } from '../../pages/PlaylistPage';
 import '../../styles/playlistPage/SongBox.css';
 
 
-function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPlay, handleDelete}) {
+function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleDelete}) {
 
     const [songTitle, setSongTitle] = useState('');
     const [imgUrl, setImgUrl] = useState('');
-    const [action, setAction] = useState();
     const [isTitleExpanded, setTitleExpanded] = useState(false);
     const [isTitleScrolling, setTitleScrolling] = useState(false);
-    const { playlistId, baseUrl, editing} = usePlaylistContext(); 
+    const { editing } = usePlaylistContext(); 
     const [showGarbageIcon, setShowGarbageIcon] = useState(false);
-    const [longPressInProgress, setLongPressInProgress] = useState(false);
+    //const [longPressInProgress, setLongPressInProgress] = useState(false);
 
     const key = process.env.REACT_APP_KEY;
     const titleThreshold = 25;
@@ -30,9 +29,8 @@ function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPl
 
     useEffect(() => {
         if (songId != null) {
-             const titleElement = titleRef.current;
+            const titleElement = titleRef.current;
             const titleParentContainer = titleParentRef.current;
-        
             const isTooLong = titleElement.scrollWidth > titleParentContainer.offsetWidth;
         
             if (isTooLong) {
@@ -90,36 +88,36 @@ function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPl
                 console.log('Is long press - not continuing.');
                 return;
               }
-              setAction('click')
+            //   setAction('click')
         }
     }
 
-    const handleMouseDown = () => {
-        if(editing) {
-            longPressTimer = setTimeout(() => {
-                setShowGarbageIcon(true);
-                setLongPressInProgress(true);
-            }, 3000);
-        }
-    };
+    // const handleMouseDown = () => {
+    //     if(editing) {
+    //         longPressTimer = setTimeout(() => {
+    //             setShowGarbageIcon(true);
+    //             setLongPressInProgress(true);
+    //         }, 3000);
+    //     }
+    // };
 
-    const handleMouseUp = () => {
-        if (editing) {
-            clearTimeout(longPressTimer);
-            if (longPressInProgress) {
-              // Long press was detected, don't hide the garbage icon
-              setLongPressInProgress(false);
-            } else {
-              // No long press, hide the garbage icon
-              setShowGarbageIcon(false);
-            }
-        }
-    };
+    // const handleMouseUp = () => {
+    //     if (editing) {
+    //         clearTimeout(longPressTimer);
+    //         if (longPressInProgress) {
+    //           // Long press was detected, don't hide the garbage icon
+    //           setLongPressInProgress(false);
+    //         } else {
+    //           // No long press, hide the garbage icon
+    //           setShowGarbageIcon(false);
+    //         }
+    //     }
+    // };
 
-    const handleGarbageIconClick = () => {
-        // Handle the removal of the song from the playlist
-        console.log('Want to delete song: ', songId);
-    };
+    // const handleGarbageIconClick = () => {
+    //     // Handle the removal of the song from the playlist
+    //     console.log('Want to delete song: ', songId);
+    // };
 
     // function handleOnClick(e) {
     //     console.log('handleOnClick');
@@ -154,7 +152,7 @@ function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPl
         isLongPress.current = false;
         timerRef.current = setTimeout(() => {
         isLongPress.current = true;
-        setAction('longpress');
+        // setAction('longpress');
         setShowGarbageIcon(true);
         }, 1000);
     }
@@ -172,8 +170,6 @@ function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPl
         } else return '';
 
     }
-
-    const imagePath = "/images/good-luck.png";
 
     return (
         
@@ -193,10 +189,9 @@ function SongBox({songId, inSearch, songIndex, handleClick, isPlaying, onClickPl
                         {songTitle}
                     </div>
                 </div>
-                {inSearch? null : (
-                    <button className='play-button' disabled={inSearch} hidden={inSearch} onClick={onClickPlay}>
+                <button className='play-button' disabled={inSearch} hidden={inSearch} onClick={onClickPlay}>
                     <FontAwesomeIcon icon={isPlaying?faCirclePause:faCirclePlay} />
-                </button>)}
+                </button>
             </div>
             {showGarbageIcon && (
                 <div className='garbage-icon' onClick={() => {handleDelete(songId); setShowGarbageIcon(false)}}>

@@ -20,7 +20,7 @@ function AdminPage() {
   console.log('created qr: ', createdQR);
   console.log('selected from admin page: ', selectedPlaylist);
   const adminContextValue = {
-    baseUrl: 'http://localhost:3030/api/admin', // TODO: localhost should be changed to relevant url
+    baseUrl: process.env.REACT_APP_SERVER + '/api/admin', //'http://localhost:3030/api/admin', // TODO: localhost should be changed to relevant url
     selectedPlaylist: selectedPlaylist,
     createdQR: createdQR,
   };

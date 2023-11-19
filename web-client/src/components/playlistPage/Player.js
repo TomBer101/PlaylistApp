@@ -31,10 +31,10 @@ function Player() {
     fetchSongs()
   }, [playlistId])
 
-  // useEffect(() => {
-  //   console.log('Current Songs: ', songs);
-  //   updateSongs();
-  // }, [songs])
+  useEffect(() => {
+    console.log('Current Songs: ', songs);
+    updateSongs();
+  }, [songs])
 
   async function fetchSongs ()  {
     if (playlistId) {
@@ -76,6 +76,7 @@ function Player() {
 
 
   const playNextSong = () => {
+    console.log('play next song');
     if (selectedIndex < songs.length - 1 && songs[selectedIndex+1] != null) {
       setSelectedIndex(selectedIndex + 1);
     } else {
@@ -106,6 +107,7 @@ function Player() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          headers: 'Access-Control-Allow-Origin',
         },
         body: requestBody,
       });
@@ -129,9 +131,9 @@ function Player() {
     }
   }
 
-  const togglePause = () => {
-    setIsPlaying(!isPlaying);
-  }
+  // const togglePause = () => {
+  //   setIsPlaying(!isPlaying);
+  // }
 
   useEffect(() => {
     playVideoById(songs[selectedIndex]);
@@ -171,12 +173,12 @@ function Player() {
 
     return(
       <div className='player-container player'>
-          <SongBox key={1} handleDelete={removeSong} songId={songs[0]} songIndex={0} isPlaying={(selectedIndex==0) && isPlaying} 
+          <SongBox key={1} handleDelete={removeSong} songId={songs[0]} isPlaying={(selectedIndex==0) && isPlaying} 
             handleClick={() => selectSongBox(0)} onClickPlay={()=>handlePlayPause(0)}/>
-          <SongBox key={2} handleDelete={removeSong} songId={songs[1]} songIndex={1} isPlaying={(selectedIndex==1) && isPlaying}
+          <SongBox key={2} handleDelete={removeSong} songId={songs[1]} isPlaying={(selectedIndex==1) && isPlaying}
             handleClick={() => selectSongBox(1)} onClickPlay={()=>handlePlayPause(1)}/>
           <SongBox key={3} handleDelete={removeSong} songId={songs[2]} isPlaying={(selectedIndex==2) && isPlaying}
-            songIndex={2} handleClick={() => selectSongBox(2)} onClickPlay={()=>handlePlayPause(2)}/>
+            handleClick={() => selectSongBox(2)} onClickPlay={()=>handlePlayPause(2)}/>
           <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />
           <YouTube
             opts={opts}
