@@ -73,7 +73,7 @@ function PlaylistPage() {
     <PlaylistContext.Provider value={context}>
         <div className="playlist-page-container">
             <Title name={playlistData? playlistData.data.name : ''}/>
-            <Image  imageName={playlistData? playlistData.data.coverImage : ''}/>
+            {playlistData && <Image  fileName={playlistData.data.coverImageFileName} type={playlistData.data.coverImageType} imageName={playlistData.data.coverImage}/>}
             <Player  />
             <div className='save-button'>
               <button  onClick={savePlaylist} hidden={context && !context.editing} >Done!</button>

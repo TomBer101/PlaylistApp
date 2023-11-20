@@ -45,12 +45,20 @@ router.get('/scanned/:entryId', async (req, res) => {
             pageType = "creator"; 
         }
 
+        const formattedCoverImageData = playlist.coverImage ?
+            {
+                contentType: playlist.coverImage.contentType,
+                data: playlist.coverImage.data.toString('base64'),
+            } : null;
+
         return res.status(200).json({
             pageType: pageType,
             data: {
                 name: playlist.name,
                 songs: playlist.songs,
-                coverImage: playlist.coverImage,
+                coverImage: formattedCoverImageData,
+                coverImageType : playlist.coverImageType,
+                coverImageFileName : playlist.coverImageFileName,
             },
             id: entryId,
         });
@@ -61,7 +69,6 @@ router.get('/scanned/:entryId', async (req, res) => {
         res.status(500).json({error: 'Internal Server Error'});
     }
 });
-
 
 
 router.post('/update-songs/:playlistId', async (req, res) => {
@@ -124,7 +131,6 @@ router.post('/change-name/:playlistId', async (req, res) => {
 })
 
 
-
 router.post('/upload-image/:playlistId', upload.single('image'), async (req, res) => {
     try{
         const {playlistId} = req.params;
@@ -145,6 +151,8 @@ router.post('/upload-image/:playlistId', upload.single('image'), async (req, res
                 data: req.file.buffer,
                 contentType: req.file.mimetype,
             };
+            playlist.coverImageType = 'uploaded';
+
             await playlist.save();
             res.status(200).json({message: "Your image was uploaded successfully."});
         } else {
@@ -177,7 +185,12 @@ router.post('/select-image/:playlistId', async (req, res) => {
         //     fs.unlinkSync('public/uploads' + playlist.coverImage);
         // }
 
-        playlist.coverImage = imageName;
+        if(playlist.coverImageType === 'uploaded') {
+            playlist.coverImage = undefined;
+        }
+
+        playlist.coverImageFileName = imageName;
+        playlist.coverImageType = 'builtin';
         await playlist.save();
 
         res.status(200).json({message: 'Image updated.'});
