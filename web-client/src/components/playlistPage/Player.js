@@ -33,7 +33,9 @@ function Player() {
 
   useEffect(() => {
     console.log('Current Songs: ', songs);
-    updateSongs();
+    if(baseUrl != undefined && playlistId != undefined){
+      updateSongs();
+    }
   }, [songs])
 
   async function fetchSongs ()  {

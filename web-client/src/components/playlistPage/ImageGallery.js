@@ -85,8 +85,8 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
 
    return (!isVisible ? null :
         (
-            <div className='image-gallery-container'>
-                <div className='image-gallery-modal'>
+            <div className='image-gallery-container' onClick={()=>setIsVisible(false)}>
+                <div className='image-gallery-modal' >
 
                     <div className='images-container ' style={{marginTop:'27px'}}>
                         {images.map((image, index) => (

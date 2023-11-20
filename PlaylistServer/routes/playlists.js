@@ -44,8 +44,12 @@ router.get('/scanned/:entryId', async (req, res) => {
         } else {
             pageType = "creator"; 
         }
+        console.log('====================================');
+        console.log('playlist: ', playlist);
+        console.log('playlistCoverImage: ', playlist.coverImage);
+        console.log('====================================');
 
-        const formattedCoverImageData = playlist.coverImage ?
+        const formattedCoverImageData = playlist.coverImageType === 'uploaded' ?
             {
                 contentType: playlist.coverImage.contentType,
                 data: playlist.coverImage.data.toString('base64'),
@@ -186,7 +190,7 @@ router.post('/select-image/:playlistId', async (req, res) => {
         // }
 
         if(playlist.coverImageType === 'uploaded') {
-            playlist.coverImage = undefined;
+            playlist.coverImage.data = undefined;
         }
 
         playlist.coverImageFileName = imageName;
