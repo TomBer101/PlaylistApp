@@ -28,7 +28,7 @@ function Player() {
 
 
   useEffect(() => {
-    fetchSongs()
+    //fetchSongs()
   }, [playlistId])
 
   useEffect(() => {

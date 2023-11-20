@@ -6,20 +6,35 @@ import '../../styles/playlistPage/Image.css';
 const imagePath = "/images/default.jpg"
 
 function Image({imageName}) {
+
     const { playlistId, baseUrl, editing, ip} = usePlaylistContext();
     const [isPopUpVisible, setPopUpVisible] = useState(false);
     const [selectedImage, setSelectedImage] = useState(imageName || '');
 
-    useEffect(() => {
-        if (selectedImage.startsWith('/uploads-')) {
-            const imageSrc = baseUrl.split('/api')[0]+'/uploads/' + selectedImage;
-            setSelectedImage(imageSrc);
-        }
-    }, [selectedImage]);
+console.log('====================================');
+console.log('Image name: ', imageName);
+console.log('====================================');
+    // useEffect(() => {
+    //     if (selectedImage.startsWith('/uploads-')) {
+    //         const imageSrc = baseUrl.split('/api')[0]+'/uploads/' + selectedImage;
+    //         setSelectedImage(imageSrc);
+    //     }
+    // }, [selectedImage]);
+
+    // useEffect(() => {
+    //     setSelectedImage(imageName || '')
+    // },[imageName]);
 
     useEffect(() => {
-        setSelectedImage(imageName || '')
-    },[imageName]);
+        if (imageName.startsWith('/images'))
+        {
+            setSelectedImage(imageName);
+        } else {
+            const base64String = btoa(String.fromCharCode(...new Uint8Array(imageName.data)));
+            const imageUrl = `data:${imageName.contentType};base64,${base64String}`;
+            setSelectedImage(imageUrl);
+        }
+    }, [imageName]);
 
     const handleImageOnClick = async () => {
         if(editing) {

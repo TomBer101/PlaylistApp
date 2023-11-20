@@ -5,23 +5,31 @@ import { usePlaylistContext } from '../../pages/PlaylistPage';
 import '../../styles/playlistPage/ImageGallery.css';
 
 function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedImage}) {
+
     const [images, setImages] = useState(['/images/default.jpg', '/images/congrats.png', '/images/good-luck.png', '/images/happybirthday.jpg']);
     const [uploaded, setUploaded] = useState(null);
     const { playlistId, baseUrl, editing } = usePlaylistContext();
+
     
     const handleUploadImage = async (event) => {
-        console.log('HEREEEE');
+
         const file = event.target.files[0];
         if (file) {
-            if (uploaded != null) {
-                images.pop();
+            const maxImageSize = 15 * 1024 * 1024;
+            if (file.size > maxImageSize){
+                alert("Please upload an image with a size of less than 15MB");
+            } else {
+                if (uploaded != null) {
+                    images.pop();
+                }
+                setUploaded(file);
+                const uploadedImage = URL.createObjectURL(file);
+                console.log('uploaded: ', uploadedImage);
+                handleImageSelected(uploadedImage);
+                console.log(selectedImage);
+                setImages((prevImages) => [...prevImages, uploadedImage]);
             }
-            setUploaded(file);
-            const uploadedImage = URL.createObjectURL(file);
-            console.log('uploaded: ', uploadedImage);
-            handleImageSelected(uploadedImage);
-            console.log(selectedImage);
-            setImages((prevImages) => [...prevImages, uploadedImage]);
+
         }
     }
 

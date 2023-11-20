@@ -26,7 +26,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/sse', require('./routes/sse').router);
 
 
-mongoose.connect(process.env.CONNECTION_STRING,{
+mongoose.connect(process.env.MONGO_CONNECTION_STRING,{
     useNewUrlParser: true,
     useUnifiedTopology:true
 })

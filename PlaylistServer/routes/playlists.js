@@ -12,17 +12,21 @@ const { playlistUpdateEmitter } = require('./sse');
 
 
 router.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'public/uploads')
-    },
-    filename: function (req, file, cb) {
-      //const uniqueSuffix = Date.now()
-      cb(null, "/uploads-" + file.originalname + '-' + Date.now());
-    }
-  });
 
-const upload = multer({ storage: storage })
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, 'public/uploads')
+//     },
+//     filename: function (req, file, cb) {
+//       //const uniqueSuffix = Date.now()
+//       cb(null, "/uploads-" + file.originalname + '-' + Date.now());
+//     }
+//   });
+
+// const upload = multer({ storage: storage })
+
+const storage = multer.memoryStorage();
+const upload = multer({storage});
 
 
 router.get('/scanned/:entryId', async (req, res) => {
@@ -124,22 +128,36 @@ router.post('/change-name/:playlistId', async (req, res) => {
 router.post('/upload-image/:playlistId', upload.single('image'), async (req, res) => {
     try{
         const {playlistId} = req.params;
-        
         const playlist = await Playlist.findById(playlistId);
+
         if (!playlist) {
             return res.status(404).json({error: 'Playlist not found'});
         }
 
-        if (playlist.coverImage && playlist.coverImage.startsWith('/uploads')) {
-            fs.unlinkSync('public/uploads' + playlist.coverImage);
+        // if (playlist.coverImage && playlist.coverImage.startsWith('/uploads')) {
+        //     fs.unlinkSync('public/uploads' + playlist.coverImage);
+        // }
+        
+        const maxFileSize = 15 * 1024 * 1024;
+        if(req.file.size <= maxFileSize){
+
+            playlist.coverImage = {
+                data: req.file.buffer,
+                contentType: req.file.mimetype,
+            };
+            await playlist.save();
+            res.status(200).json({message: "Your image was uploaded successfully."});
+        } else {
+            res.status(400).json({message: "The chosen image is too big."});
         }
 
-        playlist.coverImage = req.file.filename;
-        await playlist.save();
-        res.status(200).json({message: 'I got you image;)'})
+        // playlist.coverImage = req.file.filename;
+        // await playlist.save();
+        // res.status(200).json({message: 'I got you image;)'})
 
     } catch (error) {
         console.error(" uploading image: ", error);
+        res.status(500).json({error:"Internal Server Error trying uploading image."});
     }
 })
 
@@ -155,9 +173,9 @@ router.post('/select-image/:playlistId', async (req, res) => {
             return res.status(404).json({error: 'Playlist not found'});
         }
 
-        if (playlist.coverImage && playlist.coverImage.startsWith('/uploads-')) {
-            fs.unlinkSync('public/uploads' + playlist.coverImage);
-        }
+        // if (playlist.coverImage && playlist.coverImage.startsWith('/uploads-')) {
+        //     fs.unlinkSync('public/uploads' + playlist.coverImage);
+        // }
 
         playlist.coverImage = imageName;
         await playlist.save();

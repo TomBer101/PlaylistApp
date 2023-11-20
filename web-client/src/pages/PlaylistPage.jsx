@@ -22,7 +22,8 @@ function PlaylistPage() {
       const playlistIdParam = searchParams.get('playlistId'); 
       if (playlistIdParam) {
         console.log('playlist id: ', playlistIdParam);
-          const base = `http://localhost:3030/api/playlists`;
+          //const base = `http://localhost:3030/api/playlists`;
+          const base = process.env.REACT_APP_SERVER + '/api/playlists';
           fetchPlaylistData(base, playlistIdParam);
       }
   }, []);

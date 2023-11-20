@@ -21,7 +21,8 @@ const playlistSchema = new mongoose.Schema({
   },
   coverImage: {
      type: String,
-     default: 'http://localhost:3030/images/default.jpg',
+     //default: 'http://localhost:3030/images/default.jpg',
+     default: process.env.REACT_APP_SERVER + '/images/default.jpg',
     },
     _id: mongoose.Schema.Types.ObjectId,
 });
