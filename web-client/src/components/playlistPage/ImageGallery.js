@@ -12,7 +12,9 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
 
     
     const handleUploadImage = async (event) => {
-
+        console.log('====================================');
+        console.log('HERE.');
+        console.log('====================================');
         const file = event.target.files[0];
         if (file) {
             const maxImageSize = 15 * 1024 * 1024;
@@ -26,59 +28,60 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
                 const uploadedImage = URL.createObjectURL(file);
                 console.log('uploaded: ', uploadedImage);
                 handleImageSelected(uploadedImage);
-                console.log(selectedImage);
+                console.log("Image added to options: ", selectedImage);
                 setImages((prevImages) => [...prevImages, uploadedImage]);
             }
 
         }
     }
 
-    const handleImageClick = (imageName) => {
-        handleImageSelected(imageName);
+    const submitUploadedImage = async () => {
+        const formData = new FormData();
+        formData.append('image', uploaded);
+        console.log('Form data: ', formData);
+        try {
+            const response = await fetch(baseUrl + `/upload-image/${playlistId}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                console.error('Error uploading image to server');
+            }
+        } catch (error) {
+            console.error(`Error uploading image : `+ error );
+            alert(' Uploading image failed.');
+        }
+    }
+
+    const handleBuiltInImage = async (imageName) => {
+        try{
+            const response = await fetch(baseUrl + `/select-image/${playlistId}`, {
+                method: 'POST',
+                body: JSON.stringify({imageName: imageName}),
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log("The response: ",response);
+            if (!response.ok) {
+                console.error('Failed sending image name to server');
+            }
+        } catch (error) {
+            console.error(`Error uploading image name : `+ error );
+            alert('Sending image name failed.');
+        }
     }
 
     const closeModal = async (imageName) => {
-        console.log("close modal");
         setIsVisible(false);
         handleImageSelected(imageName);
         if (selectedImage !== null) {
-            console.log('Selected image: ', imageName);
             if (imageName.startsWith('/images')) {
-                try {
-                    const response = await fetch(baseUrl + `/select-image/${playlistId}`, {
-                        method: 'POST',
-                        body: JSON.stringify({imageName: imageName}),
-                        headers:{
-                            'Content-Type': 'application/json',
-                        },
-                    });
-
-                    console.log("The response: ",response);
-                    if (!response.ok) {
-                        console.error('Failed sending image name to server');
-                    }
-                } catch (error) {
-                    console.error(`Error uploading image name : `+ error );
-                    alert('Sending image name failed.');
-                }
-
+                await handleBuiltInImage(imageName);
             } else {
-                const formData = new FormData();
-                formData.append('image', uploaded);
-                console.log('Form data: ', formData);
-                try {
-                    const response = await fetch(baseUrl + `/upload-image/${playlistId}`, {
-                        method: 'POST',
-                        body: formData,
-                    });
-
-                    if (!response.ok) {
-                        console.error('Error uploading image to server');
-                    }
-                } catch (error) {
-                    console.error(`Error uploading image : `+ error );
-                    alert(' Uploading image failed.');
-                }
+                await submitUploadedImage();
             }
         }
     }

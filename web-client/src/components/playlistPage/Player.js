@@ -119,7 +119,7 @@ function Player() {
       }
 
       const responseData = await response.json();
-      console.log(responseData.message); // Log the response message
+      console.log(responseData.message); 
     } catch (error) {
       console.error('Error updating songs: ', error);
     }
@@ -133,16 +133,11 @@ function Player() {
     }
   }
 
-  // const togglePause = () => {
-  //   setIsPlaying(!isPlaying);
-  // }
-
   useEffect(() => {
     playVideoById(songs[selectedIndex]);
   }, [selectedIndex])
 
   const handlePlayPause = (songIndex) => {
-    console.log("The song that should be playing is: ", selectedIndex);
     if (!isPlaying) {
       setSelectedIndex(songIndex);
       setIsPlaying(true);
@@ -159,8 +154,6 @@ function Player() {
     }
   }
 
-
-
    function  removeSong (songId)  {
     setSongs(oldSongs => {
       const newSongs = oldSongs.map((song) => {
@@ -170,8 +163,6 @@ function Player() {
       return newSongs;
     })
   }
-
-
 
     return(
       <div className='player-container player'>

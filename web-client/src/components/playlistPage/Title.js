@@ -16,7 +16,6 @@ function Title({name}) {
     }
 
     async function saveName () {
-        console.log("Sending request to save the name: ", inputText);
         console.log('jsonf: ', JSON.stringify({name: inputText}));
         try{
             console.log(baseUrl);
@@ -38,7 +37,14 @@ function Title({name}) {
 
     return (
         <div className="title">
-            <input type='text' value={inputText} onChange={handleChange} disabled={!editing} onBlur={saveName} placeholder='Name the playlist'/>
+            <input 
+                type='text' 
+                value={inputText} 
+                onChange={handleChange} 
+                disabled={!editing} 
+                onBlur={saveName} 
+                placeholder='Name the playlist'
+            />
         </div>
     )
 }

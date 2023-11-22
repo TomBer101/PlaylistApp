@@ -16,7 +16,6 @@ function QRDisplay({setCreatedQR, setSelectedPlaylist}) {
         } else if (createdQR != null) {
             setQRCode(createdQR.code)
         }
-        console.log('selected playlist in QR display: ', selectedPlaylist);
         setCurrentColor(prevColor => {
             if (prevColor === colors.length - 1) return 0;
             return (prevColor + 1);

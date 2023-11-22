@@ -3,7 +3,6 @@ import { usePlaylistContext } from '../../pages/PlaylistPage';
 import ImageGallery from './ImageGallery';
 import '../../styles/playlistPage/Image.css';
 
-const imagePath = "/images/default.jpg"
 
 function Image({imageName, fileName, type}) {
 
@@ -14,21 +13,12 @@ function Image({imageName, fileName, type}) {
 console.log('====================================');
 console.log('Image name: ', fileName);
 console.log('====================================');
-    // useEffect(() => {
-    //     if (selectedImage.startsWith('/uploads-')) {
-    //         const imageSrc = baseUrl.split('/api')[0]+'/uploads/' + selectedImage;
-    //         setSelectedImage(imageSrc);
-    //     }
-    // }, [selectedImage]);
 
-    // useEffect(() => {
-    //     setSelectedImage(imageName || '')
-    // },[imageName]);
 
     useEffect(() => {
-        if (type === 'builtin'){
+        if (type === 'builtin') {
             setSelectedImage(fileName);
-        } else if(type === 'uploaded'){
+        } else if (type === 'uploaded') {
             console.log('====================================');
             console.log('fetching uploaded file.');
             console.log('====================================');

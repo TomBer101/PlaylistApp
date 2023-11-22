@@ -13,19 +13,14 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
     const [isTitleScrolling, setTitleScrolling] = useState(false);
     const { editing } = usePlaylistContext(); 
     const [showGarbageIcon, setShowGarbageIcon] = useState(false);
-    //const [longPressInProgress, setLongPressInProgress] = useState(false);
 
     const key = process.env.REACT_APP_KEY;
-    const titleThreshold = 25;
 
     const titleParentRef = useRef(null);
     const titleRef = useRef(null);
     const timerRef = useRef();
     const isLongPress = useRef();
     const songBoxRef = useRef(null);
-
-
-    let longPressTimer;
 
     useEffect(() => {
         if (songId != null) {
@@ -40,7 +35,7 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
             }
         }
 
-      }, [songTitle]);
+    }, [songTitle]);
 
 
     useEffect(() => {
@@ -63,14 +58,13 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
         return () => {
           document.body.removeEventListener('click', handleDocumentClick);
         };
-      }, [showGarbageIcon]);
+    }, [showGarbageIcon]);
 
     async function fetchSongData(songId) {
         if (songId != null){
             try {
             const response =  await fetch(`https://www.googleapis.com/youtube/v3/search?key=${key}&type=video&part=snippet&q=${songId}` );
             const data = await response.json();
-            console.log("song data: ",data);
             const song = data.items[0];
             setImgUrl(song.snippet.thumbnails.default.url);
             setSongTitle((song.snippet.title).split('(')[0]);
@@ -88,45 +82,8 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
                 console.log('Is long press - not continuing.');
                 return;
               }
-            //   setAction('click')
         }
     }
-
-    // const handleMouseDown = () => {
-    //     if(editing) {
-    //         longPressTimer = setTimeout(() => {
-    //             setShowGarbageIcon(true);
-    //             setLongPressInProgress(true);
-    //         }, 3000);
-    //     }
-    // };
-
-    // const handleMouseUp = () => {
-    //     if (editing) {
-    //         clearTimeout(longPressTimer);
-    //         if (longPressInProgress) {
-    //           // Long press was detected, don't hide the garbage icon
-    //           setLongPressInProgress(false);
-    //         } else {
-    //           // No long press, hide the garbage icon
-    //           setShowGarbageIcon(false);
-    //         }
-    //     }
-    // };
-
-    // const handleGarbageIconClick = () => {
-    //     // Handle the removal of the song from the playlist
-    //     console.log('Want to delete song: ', songId);
-    // };
-
-    // function handleOnClick(e) {
-    //     console.log('handleOnClick');
-    //     if ( isLongPress.current ) {
-    //       console.log('Is long press - not continuing.');
-    //       return;
-    //     }
-    //     setAction('click')
-    //   }
 
     const handleOnMouseUp = () => {
         console.log('handleOnMouseUp');
@@ -152,7 +109,6 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
         isLongPress.current = false;
         timerRef.current = setTimeout(() => {
         isLongPress.current = true;
-        // setAction('longpress');
         setShowGarbageIcon(true);
         }, 1000);
     }
