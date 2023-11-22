@@ -19,8 +19,8 @@ app.use(express.urlencoded({extended:false}))
 app.use(express.json());
 app.use(express.static('public'));
 
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+//app.use('/images', express.static(path.join(__dirname, 'public/images')));
+//app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use('/api/playlists', require('./routes/playlists'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/sse', require('./routes/sse').router);

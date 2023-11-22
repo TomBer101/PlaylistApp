@@ -1,8 +1,6 @@
 const express = require('express');
-const axios = require('axios');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 const Playlist = require('../models/Playlist');
 const router = express.Router();
 const events = require('events');
@@ -13,17 +11,6 @@ const { playlistUpdateEmitter } = require('./sse');
 
 router.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, 'public/uploads')
-//     },
-//     filename: function (req, file, cb) {
-//       //const uniqueSuffix = Date.now()
-//       cb(null, "/uploads-" + file.originalname + '-' + Date.now());
-//     }
-//   });
-
-// const upload = multer({ storage: storage })
 
 const storage = multer.memoryStorage();
 const upload = multer({storage});
@@ -144,10 +131,6 @@ router.post('/upload-image/:playlistId', upload.single('image'), async (req, res
             return res.status(404).json({error: 'Playlist not found'});
         }
 
-        // if (playlist.coverImage && playlist.coverImage.startsWith('/uploads')) {
-        //     fs.unlinkSync('public/uploads' + playlist.coverImage);
-        // }
-        
         const maxFileSize = 15 * 1024 * 1024;
         if(req.file.size <= maxFileSize){
 
@@ -162,10 +145,6 @@ router.post('/upload-image/:playlistId', upload.single('image'), async (req, res
         } else {
             res.status(400).json({message: "The chosen image is too big."});
         }
-
-        // playlist.coverImage = req.file.filename;
-        // await playlist.save();
-        // res.status(200).json({message: 'I got you image;)'})
 
     } catch (error) {
         console.error(" uploading image: ", error);
@@ -184,10 +163,6 @@ router.post('/select-image/:playlistId', async (req, res) => {
         if (!playlist) {
             return res.status(404).json({error: 'Playlist not found'});
         }
-
-        // if (playlist.coverImage && playlist.coverImage.startsWith('/uploads-')) {
-        //     fs.unlinkSync('public/uploads' + playlist.coverImage);
-        // }
 
         if(playlist.coverImageType === 'uploaded') {
             playlist.coverImage.data = undefined;

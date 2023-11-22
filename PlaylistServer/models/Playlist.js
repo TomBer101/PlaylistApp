@@ -19,11 +19,6 @@ const playlistSchema = new mongoose.Schema({
     required: false,
     unique: false,
   },
-  // coverImage: {
-  //    type: String,
-  //    //default: 'http://localhost:3030/images/default.jpg',
-  //    default: process.env.REACT_APP_SERVER + '/images/default.jpg',
-  //   },
   coverImage :{
     data: Buffer,
     contentType: String,
@@ -46,5 +41,4 @@ playlistSchema.pre('save', function (next) {
 
 const Playlist = mongoose.model('Playlist', playlistSchema);
 
-// Export the model
 module.exports = Playlist;
