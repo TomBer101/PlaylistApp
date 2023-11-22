@@ -31,10 +31,6 @@ router.get('/scanned/:entryId', async (req, res) => {
         } else {
             pageType = "creator"; 
         }
-        console.log('====================================');
-        console.log('playlist: ', playlist);
-        console.log('playlistCoverImage: ', playlist.coverImage);
-        console.log('====================================');
 
         const formattedCoverImageData = playlist.coverImageType === 'uploaded' ?
             {
@@ -141,6 +137,9 @@ router.post('/upload-image/:playlistId', upload.single('image'), async (req, res
             playlist.coverImageType = 'uploaded';
 
             await playlist.save();
+            console.log('====================================');
+            console.log('playlist saved after upload image.');
+            console.log('====================================');
             res.status(200).json({message: "Your image was uploaded successfully."});
         } else {
             res.status(400).json({message: "The chosen image is too big."});

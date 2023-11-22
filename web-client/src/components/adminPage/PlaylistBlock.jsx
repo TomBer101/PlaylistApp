@@ -2,18 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { useAdminContext } from "../../pages/AdminPage";
 import '../../styles/adminPage/PlaylistBlock.css';
 
+// React.Memo? set selected shoud use callback(?)
 function PlaylistBlock({playlistInfo, setSelectedPlaylist}) {
     const [imgSrc, setImgSrc] = useState(null);
     const {baseUrl, selectedPlaylist} = useAdminContext();
 
     // useEffect(() => {
-    //     if (playlistInfo.coverImage.startsWith('/uploads-')) {
+    //     if (playlistInfo.coverImage.startsWith('/images')) {
     //         const imageSrc = baseUrl.split('/api')[0]+'/uploads/' + playlistInfo.coverImage;
     //         setImgSrc(imageSrc);
     //     } else {
     //         setImgSrc(playlistInfo.coverImage);
     //     }
     // }, []);
+
+    useEffect(() => {
+        if (playlistInfo.coverImageType === 'builtin') {
+            setImgSrc(playlistInfo.coverImageFileName);
+        } else {
+            console.log('====================================');
+            console.log("playlist info: ", playlistInfo);
+            console.log('====================================');
+            const base64Image = `data:${playlistInfo.coverImage.contentType};base64,${playlistInfo.coverImage.data.data.toString('base64')}`;
+            setImgSrc(base64Image);
+        }
+    })
 
 
     const handlePlaylistSelected = async () => {

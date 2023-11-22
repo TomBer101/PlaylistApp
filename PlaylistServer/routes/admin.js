@@ -32,7 +32,7 @@ router.post('/create', async (req, res) => {
 
 router.get('/showplaylists', async (req, res) => {
     try {
-        const playlists = await Playlist.find({edited: true}, '_id name coverImage'); 
+        const playlists = await Playlist.find({edited: true}, '_id name coverImageType coverImageFileName coverImage'); 
         res.json(playlists);
     } catch (error) {
         console.error('Error getting all playlists:', error);
