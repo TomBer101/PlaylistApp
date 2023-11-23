@@ -7,17 +7,15 @@ import '../../styles/playlistPage/SongBox.css';
 
 function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleDelete}) {
 
+    console.log('Rendering SongBox: ', songId);
     const [songTitle, setSongTitle] = useState('');
     const [imgUrl, setImgUrl] = useState('');
     const [isTitleExpanded, setTitleExpanded] = useState(false);
     const [isTitleScrolling, setTitleScrolling] = useState(false);
     const { editing } = usePlaylistContext(); 
     const [showGarbageIcon, setShowGarbageIcon] = useState(false);
-    //const [longPressInProgress, setLongPressInProgress] = useState(false);
 
     const key = process.env.REACT_APP_KEY;
-    const titleThreshold = 25;
-
     const titleParentRef = useRef(null);
     const titleRef = useRef(null);
     const timerRef = useRef();
@@ -25,7 +23,6 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
     const songBoxRef = useRef(null);
 
 
-    let longPressTimer;
 
     useEffect(() => {
         if (songId != null) {
@@ -44,7 +41,7 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
 
 
     useEffect(() => {
-        fetchSongData(songId) //commented to prevent using youtube api when develpoing
+        fetchSongData(songId) 
     }, [songId])
 
     useEffect(() => {
@@ -56,16 +53,15 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
           }
         };
     
-        // Add a click event listener to the document body
         document.body.addEventListener('click', handleDocumentClick);
     
-        // Clean up the event listener when the component unmounts
         return () => {
           document.body.removeEventListener('click', handleDocumentClick);
         };
       }, [showGarbageIcon]);
 
     async function fetchSongData(songId) {
+        console.log('fetching song data: ', songId);
         if (songId != null){
             try {
             const response =  await fetch(`https://www.googleapis.com/youtube/v3/search?key=${key}&type=video&part=snippet&q=${songId}` );
@@ -88,7 +84,7 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
                 console.log('Is long press - not continuing.');
                 return;
               }
-            //   setAction('click')
+
         }
     }
 
@@ -179,13 +175,13 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
             onMouseDown={handleOnMouseDown}
             onMouseUp={handleOnMouseUp}
             onTouchStart={handleOnTouchStart}
-            onTouchEnd={handleOnTouchEnd}
+            onTouchEnd={handleOnTouchEnd} onClick={handleOnClick}
         >
                 <div className='image-thumbnail'>
                     <img src={imgUrl} alt='song thumbnail'/>
                 </div>
-                <div ref={titleParentRef} className={`song-details ${isTitleScrolling?'scrolling':''}`}  onClick={handleOnClick}>
-                    <div ref={titleRef} className={`song-title ${isTitleExpanded ? 'expanded' : ''}`} onClick={handleClick}>
+                <div ref={titleParentRef} className={`song-details ${isTitleScrolling?'scrolling':''}`}  >
+                    <div ref={titleRef} className={`song-title ${isTitleExpanded ? 'expanded' : ''}`} >
                         {songTitle}
                     </div>
                 </div>
@@ -206,4 +202,4 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
 }
 
 
-export default SongBox;
+export default React.memo(SongBox);

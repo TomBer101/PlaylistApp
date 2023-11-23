@@ -1,11 +1,9 @@
 const express = require('express');
-const axios = require('axios');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const Playlist = require('../models/Playlist');
 const router = express.Router();
-const events = require('events');
 require('dotenv').config();
 const { playlistUpdateEmitter } = require('./sse');
 
@@ -17,7 +15,6 @@ const storage = multer.diskStorage({
       cb(null, 'public/uploads')
     },
     filename: function (req, file, cb) {
-      //const uniqueSuffix = Date.now()
       cb(null, "/uploads-" + file.originalname + '-' + Date.now());
     }
   });

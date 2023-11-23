@@ -5,7 +5,10 @@ const playlistSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  songs: {type: [ String ], default: [null, null, null]},
+  songs: {
+    type: [ String ], 
+    default: [null, null, null]
+  },
   edited: {
     type: Boolean,
     default:false,
@@ -35,5 +38,4 @@ playlistSchema.pre('save', function (next) {
 
 const Playlist = mongoose.model('Playlist', playlistSchema);
 
-// Export the model
 module.exports = Playlist;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect } from "react";
 import { useAdminContext } from "../../pages/AdminPage";
 import '../../styles/adminPage/PlaylistsList.css';
 import PlaylistBlock from "../adminPage/PlaylistBlock";
@@ -9,6 +9,9 @@ function PlaylistsList({setCreatedQR, setSelectedPlaylist}) {
     const [loading, setLoading] = useState(true);
     const [eventSource, setEventSource] = useState(null);
 
+    console.log('====================================');
+    console.log('Rendering playlists list');
+    console.log('====================================');
 
     useEffect(() => {
         fetchAllPlaylists();
@@ -40,6 +43,7 @@ function PlaylistsList({setCreatedQR, setSelectedPlaylist}) {
         fetch(`${baseUrl}/showplaylists`)
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             setPlaylists(data);
             setLoading(false);
             console.log("the playlists: ", data);

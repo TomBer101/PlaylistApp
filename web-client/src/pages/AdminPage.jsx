@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext, useEffect } from "react";
+import React, { useState, createContext, useContext, useEffect, useCallback } from "react";
 import PlaylistsList from '../components/adminPage/PlaylistsList';
 import QRDisplay from "../components/adminPage/QRDisplay";
 import '../styles/adminPage/AdminPage.css';
@@ -10,17 +10,30 @@ export const useAdminContext = () => {
 
 function AdminPage() {
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
-  const [fetchIndicator, setFetchIndicator] = useState(false);
   const [createdQR, setCreatedQR] = useState(null);
 
-  const toggleIndicator = () => {
-    setFetchIndicator(!fetchIndicator);
-  }
+  console.log('====================================');
+  console.log('Rendering admin page');
+  console.log('====================================');
+
+  const setSelectedPlaylistCallback = useCallback(
+    (playlist) => {
+        setSelectedPlaylist(playlist);
+    },
+    [setSelectedPlaylist]
+);
+
+const setCreatedQRCallback = useCallback(
+  (playlist) => {
+      setCreatedQR(playlist);
+  },
+  [setCreatedQR]
+);
   
-  console.log('created qr: ', createdQR);
-  console.log('selected from admin page: ', selectedPlaylist);
+  console.log('Selected playlist: ', selectedPlaylist);
+
   const adminContextValue = {
-    baseUrl: process.env.REACT_APP_SERVER + '/api/admin', //'http://localhost:3030/api/admin', // TODO: localhost should be changed to relevant url
+    baseUrl: process.env.REACT_APP_SERVER + '/api/admin', 
     selectedPlaylist: selectedPlaylist,
     createdQR: createdQR,
   };
@@ -34,16 +47,12 @@ function AdminPage() {
         </div>
 
         <PlaylistsList 
-          setCreatedQR={setCreatedQR}
-          setSelectedPlaylist={setSelectedPlaylist}
-          //setSelectedPlaylist={setSelectedPlaylist} 
-          // selectedPlaylist={selectedPlaylist}
+          setCreatedQR={setCreatedQRCallback}
+          setSelectedPlaylist={setSelectedPlaylistCallback}
         />
         <QRDisplay  
-          setCreatedQR={setCreatedQR}
-          setSelectedPlaylist={setSelectedPlaylist}
-          //setSelectedPlaylist={setSelectedPlaylist} 
-          //selectedPlaylist={selectedPlaylist} 
+          setCreatedQR={setCreatedQRCallback}
+          setSelectedPlaylist={setSelectedPlaylistCallback}
         />
       </div>
     </AdminContext.Provider>

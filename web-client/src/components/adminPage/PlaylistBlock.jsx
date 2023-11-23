@@ -2,10 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useAdminContext } from "../../pages/AdminPage";
 import '../../styles/adminPage/PlaylistBlock.css';
 
+function areEqual(prevProps, nextProps) {
+    return (
+      prevProps.playlistInfo._id === nextProps.playlistInfo._id &&
+      prevProps.playlistInfo.name === nextProps.playlistInfo.name &&
+      prevProps.playlistInfo.coverImage === nextProps.playlistInfo.coverImage &&
+      prevProps.playlistInfo.name === nextProps.playlistInfo.name
+    );
+}
+
 function PlaylistBlock({playlistInfo, setSelectedPlaylist}) {
-    //const [playlistId, setPlaylistId] = useState()
     const [imgSrc, setImgSrc] = useState(null);
     const {baseUrl, selectedPlaylist} = useAdminContext();
+
+    console.log('Rendering playlist Block: ', playlistInfo.name);
 
     useEffect(() => {
         if (playlistInfo.coverImage.startsWith('/uploads-')) {
@@ -36,7 +46,6 @@ function PlaylistBlock({playlistInfo, setSelectedPlaylist}) {
         }
     };
 
-    console.log('Selected after 2: ', selectedPlaylist);
 
     return (
         <li className='playlist-box' onClick={handlePlaylistSelected} 
@@ -47,9 +56,6 @@ function PlaylistBlock({playlistInfo, setSelectedPlaylist}) {
     );
 }
 
-export default PlaylistBlock;
+export default React.memo(PlaylistBlock, areEqual);
 
-//box-shadow: 0px 0px 5px 3px black;
-//(selectedPlatlist && selectedPlatlist.id === playlistInfo._id)? {backgroundColor: '#64CCC5'} : {}
 
-//

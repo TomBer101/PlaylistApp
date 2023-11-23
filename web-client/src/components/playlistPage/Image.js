@@ -10,6 +10,10 @@ function Image({imageName}) {
     const [isPopUpVisible, setPopUpVisible] = useState(false);
     const [selectedImage, setSelectedImage] = useState(imageName || '');
 
+    console.log('====================================');
+    console.log('Rendering Image');
+    console.log('====================================');
+
     useEffect(() => {
         if (selectedImage.startsWith('/uploads-')) {
             const imageSrc = baseUrl.split('/api')[0]+'/uploads/' + selectedImage;

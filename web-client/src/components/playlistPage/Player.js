@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import YouTube, {YouTubePlayer} from 'react-youtube';
 import SongBox from './SongBox';
 import SongSearchModal from '../../components/playlistPage/SongSearchModal';
@@ -24,7 +24,6 @@ function Player() {
   const [selectedIndex, setSelectedIndex] = useState(0); // the index of the current playing song in the songs
 
   const videoElement = useRef(null);
-  const apiKey = process.env.REACT_APP_KEY;
 
 
   useEffect(() => {
@@ -86,7 +85,9 @@ function Player() {
 
   const onReady = (event) => {
     videoElement.current = event.target;
-    videoElement.current.unMute();
+    if(isPlaying){
+      videoElement.current.unMute();
+    }
   }
 
   const handleChoosingSong = (youtubeId) => {
@@ -107,7 +108,7 @@ function Player() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          headers: 'Access-Control-Allow-Origin',
+  
         },
         body: requestBody,
       });
@@ -123,21 +124,29 @@ function Player() {
     }
   }
 
-  function selectSongBox(index) {
-    if (editing) {
-      setSelectedIndex(index);
-      setModalVisible(true);
-      console.log(`SongBox ${index} was clicked.`);
-    }
-  }
-
-  // const togglePause = () => {
-  //   setIsPlaying(!isPlaying);
+  // function selectSongBox(index) {
+  //   if (editing) {
+  //     setSelectedIndex(index);
+  //     setModalVisible(true);
+  //     console.log(`SongBox ${index} was clicked.`);
+  //   }
   // }
 
+  const selectSongBox = useCallback(
+    (index) => {
+      if (editing) {
+        setSelectedIndex(index);
+        setModalVisible(true);
+      }
+    }, [editing]
+  )
+
+
   useEffect(() => {
-    playVideoById(songs[selectedIndex]);
-  }, [selectedIndex])
+    if(isPlaying) {
+      playVideoById(songs[selectedIndex]);
+    }
+  }, [selectedIndex, isPlaying])
 
   const handlePlayPause = (songIndex) => {
     console.log("The song that should be playing is: ", selectedIndex);
@@ -151,6 +160,20 @@ function Player() {
     }
   }
 
+  // const handlePlayPause = useCallback(
+  //   (songIndex) => {
+  //     if (!isPlaying) {
+  //           setSelectedIndex(songIndex);
+  //           setIsPlaying(true);
+  //         } else if (songIndex == selectedIndex) {
+  //           setIsPlaying(false);
+  //         } else {
+  //           setSelectedIndex(songIndex);
+  //         }
+  //   }, [isPlaying, selectedIndex]
+  // )
+
+
   const playVideoById = (videoId) => {
     if (videoElement.current) {
       const player = videoElement.current.loadVideoById(videoId);
@@ -159,17 +182,21 @@ function Player() {
 
 
 
-   function  removeSong (songId)  {
-    setSongs(oldSongs => {
-      const newSongs = oldSongs.map((song) => {
-        if (song === songId) return null;
-        return song;
-      })
-      return newSongs;
-    })
-  }
+  //  function  removeSong (songId)  {
+  //   setSongs(oldSongs => {
+  //     const newSongs = oldSongs.map((song) => {
+  //       if (song === songId) return null;
+  //       return song;
+  //     })
+  //     return newSongs;
+  //   })
+  // }
 
-
+  const removeSong = useCallback(
+    (songId) => {
+      setSongs(oldSongs => oldSongs.filter(song => song != songId))
+    } ,[songs]
+  )
 
     return(
       <div className='player-container player'>

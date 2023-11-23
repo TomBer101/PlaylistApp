@@ -45,9 +45,8 @@ function SongSearchModal ({setIsVisible, isVisible, songIndex, handleSongChosing
         
     }
 
-    const closeModal = async () => { //TODO: make sure list is getting empty.
+    const closeModal = async () => { 
         setIsVisible(false);
-        //setShowResults(false);
         setSearchResult([]);
         setInputText('');
         if (inputText !== '') {
