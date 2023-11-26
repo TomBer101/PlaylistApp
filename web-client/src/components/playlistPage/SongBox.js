@@ -7,7 +7,6 @@ import '../../styles/playlistPage/SongBox.css';
 
 function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleDelete}) {
 
-    console.log('Rendering SongBox: ', songId);
     const [songTitle, setSongTitle] = useState('');
     const [imgUrl, setImgUrl] = useState('');
     const [isTitleExpanded, setTitleExpanded] = useState(false);
@@ -81,7 +80,6 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
         if (editing) {
             handleClick();
             if ( isLongPress.current ) {
-                console.log('Is long press - not continuing.');
                 return;
               }
 
@@ -125,22 +123,18 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
     //   }
 
     const handleOnMouseUp = () => {
-        console.log('handleOnMouseUp');
         if(editing) {clearTimeout(timerRef.current); }
     }
 
      const handleOnMouseDown = () => {
-        console.log('handleOnMouseDown');
         if (editing) {startPressTimer();}
      }
 
     const handleOnTouchStart = () => {
-        console.log('handleOnTouchStart');
         if (editing) {startPressTimer();}
     }
 
     const handleOnTouchEnd = () => {
-        console.log('handleOnTouchEnd');
         if (editing) {clearTimeout(timerRef.current);}
      }
 
@@ -148,7 +142,6 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
         isLongPress.current = false;
         timerRef.current = setTimeout(() => {
         isLongPress.current = true;
-        // setAction('longpress');
         setShowGarbageIcon(true);
         }, 1000);
     }
@@ -175,12 +168,12 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
             onMouseDown={handleOnMouseDown}
             onMouseUp={handleOnMouseUp}
             onTouchStart={handleOnTouchStart}
-            onTouchEnd={handleOnTouchEnd} onClick={handleOnClick}
+            onTouchEnd={handleOnTouchEnd} 
         >
                 <div className='image-thumbnail'>
                     <img src={imgUrl} alt='song thumbnail'/>
                 </div>
-                <div ref={titleParentRef} className={`song-details ${isTitleScrolling?'scrolling':''}`}  >
+                <div ref={titleParentRef} className={`song-details ${isTitleScrolling?'scrolling':''}`} onClick={handleOnClick} >
                     <div ref={titleRef} className={`song-title ${isTitleExpanded ? 'expanded' : ''}`} >
                         {songTitle}
                     </div>

@@ -18,8 +18,10 @@ function PlaylistPage() {
 
     useEffect(() => {
       const searchParams = new URLSearchParams(window.location.search);
-      console.log(searchParams);
+      console.log('search params: ', searchParams);
       const playlistIdParam = searchParams.get('playlistId'); 
+      console.log(' playlistIdParam: ', playlistIdParam);
+
       if (playlistIdParam) {
         console.log('playlist id: ', playlistIdParam);
           const base = `http://localhost:3030/api/playlists`;

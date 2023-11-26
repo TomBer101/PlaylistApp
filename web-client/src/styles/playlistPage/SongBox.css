@@ -101,6 +101,7 @@
     font-weight: 400;
     animation: scrollTitle 15s linear infinite;
     animation-play-state: paused;
+    color: white
     /* animation: scrollTitle 10s linear infinite ; */
     /* flex:1;
     font-size: 14px;

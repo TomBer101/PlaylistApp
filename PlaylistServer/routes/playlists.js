@@ -1,35 +1,30 @@
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
 const fs = require('fs');
 const Playlist = require('../models/Playlist');
 const router = express.Router();
 require('dotenv').config();
 const { playlistUpdateEmitter } = require('./sse');
+const { upload, router : uploadRouter} = require('../middlewares/uploadMiddleware');
+const { extractPlaylist } = require('../middlewares/playlistIdExtractorMiddleware');
 
 
-
-router.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'public/uploads')
-    },
-    filename: function (req, file, cb) {
-      cb(null, "/uploads-" + file.originalname + '-' + Date.now());
-    }
-  });
-
-const upload = multer({ storage: storage })
+router.use('/upload', uploadRouter);
 
 
-router.get('/scanned/:entryId', async (req, res) => {
+router.get('/scanned/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        const { entryId } = req.params;
-        console.log('Entry ID: ', entryId);
-        const playlist = await Playlist.findById(entryId);
-        if (!playlist) {
-            return res.status(400).json({ error: 'Invalid QR code.'});
-        }
+        // const { entryId } = req.params;
+        // console.log('Entry ID: ', entryId);
+        // const playlist = await Playlist.findById(entryId);
+        // if (!playlist) {
+        //     return res.status(400).json({ error: 'Invalid QR code.'});
+        // }
+
+        const { playlist } = req;
+        console.log('====================================');
+        console.log('playlist in req(playlist rout): ', playlist);
+        console.log('Playlist cover image: ', playlist.coverImage);
+        console.log('====================================');
 
         let pageType;
         if (playlist.edited) {
@@ -45,7 +40,7 @@ router.get('/scanned/:entryId', async (req, res) => {
                 songs: playlist.songs,
                 coverImage: playlist.coverImage,
             },
-            id: entryId,
+            id: playlist._id,
         });
 
 
@@ -57,20 +52,26 @@ router.get('/scanned/:entryId', async (req, res) => {
 
 
 
-router.post('/update-songs/:playlistId', async (req, res) => {
+router.post('/update-songs/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        const {playlistId} = req.params;
+//        const {playlistId} = req.params;
         const {songs} = req.body;
+        const { playlist } = req;
 
         console.log('Updated songs: ', songs);
+        console.log('====================================');
+        console.log('Playlist in update songs: ', playlist);
+        console.log('====================================');
 
-        const playlist = await Playlist.findById(playlistId);
-        if (!playlist) {
-            return res.status(404).json({error: 'Playlist not found'});
-        }
+        // const playlist = await Playlist.findById(playlistId);
+        // if (!playlist) {
+        //     return res.status(404).json({error: 'Playlist not found'});
+        // }
 
         playlist.songs = songs;
         await playlist.save();
+        console.log(`Playlist ${playlist._id} songs has been updated.`)
+
         res.status(200).json({message: 'Songs saved successfully'});
                 
     } catch (error) {
@@ -79,14 +80,16 @@ router.post('/update-songs/:playlistId', async (req, res) => {
     }
 });
 
-router.get('/get-songs/:playlistId', async (req, res) => {
+router.get('/get-songs/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        const {playlistId} = req.params;
-        const playlist = await Playlist.findById(playlistId);
+        // const {playlistId} = req.params;
+        // const playlist = await Playlist.findById(playlistId);
         
-        if (!playlist) {
-            return res.status(404).json({error: 'Playlist not found'});
-        }
+        // if (!playlist) {
+        //     return res.status(404).json({error: 'Playlist not found'});
+        // }
+        const { playlist } = req;
+
 
         return res.status(200).json({songs:playlist.songs});
     } catch (error) {
@@ -95,19 +98,22 @@ router.get('/get-songs/:playlistId', async (req, res) => {
     }
 })
 
-router.post('/change-name/:playlistId', async (req, res) => {
+router.post('/change-name/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        const {playlistId} = req.params;
+        //const {playlistId} = req.params;
         const {name} = req.body;
-        console.log(req.body);
-        console.log(playlistId);
-        const playlist = await Playlist.findById(playlistId);
-        if (!playlist) {
-            return res.status(404).json({error: 'Playlist not found'});
-        }
-        console.log(name);
+        const { playlist } = req;
+
+        // const playlist = await Playlist.findById(playlistId);
+        // if (!playlist) {
+        //     return res.status(404).json({error: 'Playlist not found'});
+        // }
+
+        //console.log(`Playlist ${playlistId} name changed to: ${name}.`);
+        
         playlist.name = name;
         await playlist.save();
+        console.log(`Playlist ${playlist._id} name changed to: ${name}.`)
         res.status(200).json({message: 'The name was changed successfully.'});
 
     } catch (error) {
@@ -117,15 +123,16 @@ router.post('/change-name/:playlistId', async (req, res) => {
 })
 
 
-
-router.post('/upload-image/:playlistId', upload.single('image'), async (req, res) => {
+router.post('/upload-image/:playlistId',extractPlaylist, upload.single('image'), async (req, res) => {
     try{
-        const {playlistId} = req.params;
+        // const {playlistId} = req.params;
         
-        const playlist = await Playlist.findById(playlistId);
-        if (!playlist) {
-            return res.status(404).json({error: 'Playlist not found'});
-        }
+        // const playlist = await Playlist.findById(playlistId);
+        // if (!playlist) {
+        //     return res.status(404).json({error: 'Playlist not found'});
+        // }
+
+        const { playlist } = req;
 
         if (playlist.coverImage && playlist.coverImage.startsWith('/uploads')) {
             fs.unlinkSync('public/uploads' + playlist.coverImage);
@@ -133,24 +140,27 @@ router.post('/upload-image/:playlistId', upload.single('image'), async (req, res
 
         playlist.coverImage = req.file.filename;
         await playlist.save();
-        res.status(200).json({message: 'I got you image;)'})
+        res.status(200).json({message: `Playlist ${playlist._id} was changes successfully.`})
+        console.log(`Playlist ${playlist._id} image changed to: ${req.file.filename}.`)
 
     } catch (error) {
         console.error(" uploading image: ", error);
+        res.status(500).json({message: 'Internal server error, could not upload the image.'});
     }
 })
 
-router.post('/select-image/:playlistId', async (req, res) => {
+router.post('/select-image/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        const {playlistId} = req.params;
+        //const {playlistId} = req.params;
         const {imageName} = req.body;
+        const { playlist } = req;
         console.log('Imagename from request: ', imageName);
-        console.log('Playlist ID: ', playlistId);
+        //console.log('Playlist ID: ', playlistId);
 
-        const playlist = await Playlist.findById(playlistId);
-        if (!playlist) {
-            return res.status(404).json({error: 'Playlist not found'});
-        }
+        // const playlist = await Playlist.findById(playlistId);
+        // if (!playlist) {
+        //     return res.status(404).json({error: 'Playlist not found'});
+        // }
 
         if (playlist.coverImage && playlist.coverImage.startsWith('/uploads-')) {
             fs.unlinkSync('public/uploads' + playlist.coverImage);
@@ -158,22 +168,25 @@ router.post('/select-image/:playlistId', async (req, res) => {
 
         playlist.coverImage = imageName;
         await playlist.save();
+        console.log(`Playlist ${playlist._id} image changed to: ${imageName}.`)
 
-        res.status(200).json({message: 'Image updated.'});
+        res.status(200).json({message: `Playlist's ${playlist._id} has changed successfully.`});
     } catch (error) {
-        console.error('Error updating image.', error);
-        res.status(500).json({error: 'Internal server error.'});
+        const {playlistId} = req.params;
+        console.error(`Error updating image for playlist: ${playlistId}`, error);
+        res.status(500).json({error: `Internal server error: could not change playlist ${playlistId} image successfully.`});
     }
 });
 
-router.post('/save/:playlistId', async (req, res) => {
+router.post('/save/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        const {playlistId} = req.params;
-        const playlist = await Playlist.findById(playlistId);
+        // const {playlistId} = req.params;
+        // const playlist = await Playlist.findById(playlistId);
 
-        if (!playlist) {
-            return res.status(404).json({error: 'Playlist not found'});
-        }
+        // if (!playlist) {
+        //     return res.status(404).json({error: 'Playlist not found'});
+        // }
+        const { playlist } = req;
 
         playlist.edited = true;
         await playlist.save();
@@ -185,8 +198,12 @@ router.post('/save/:playlistId', async (req, res) => {
         };
         playlistUpdateEmitter.emit('playlist_updated', message);
 
+        console.log('====================================');
+        console.log(`Playlist ${playlist._id} has been successfully saved and published.`);
+        console.log('====================================');
         res.status(200).json({message: 'Playlist was saved.'});
     } catch (error) {
+        const {playlistId} = req.params;
         console.error('Error saving playlist.', error);
         res.status(500).json({error: 'Internal server error.'});
     }

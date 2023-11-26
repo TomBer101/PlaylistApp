@@ -21,7 +21,8 @@ function Player() {
   const [isModalVisible, setModalVisible] = useState(false); 
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0); // the index of the current playing song in the songs
+  const [selectedIndex, setSelectedIndex] = useState(0); 
+  const [timeToStart, setTimeToStart] = useState(0);
 
   const videoElement = useRef(null);
 
@@ -32,7 +33,9 @@ function Player() {
 
   useEffect(() => {
     console.log('Current Songs: ', songs);
+    if (baseUrl != undefined && playlistId != undefined) {
     updateSongs();
+    }
   }, [songs])
 
   async function fetchSongs ()  {
@@ -64,20 +67,62 @@ function Player() {
         seconds.toString().padStart(2, '0') + ':' +
         ms.toString().padStart(3, '0');
 
-        console.log(formattedCurrentTime);
         if (isPlaying) {
           videoElement.current.playVideo();
+          console.log('playing song:');
+          console.log(videoElement.current.getVideoUrl());
+          console.log(videoElement.current.getCurrentTime());
+          
         } else {
           videoElement.current.pauseVideo();
+          console.log('pausing song:');
+
+          console.log(videoElement.current.getVideoUrl());
+          console.log(videoElement.current.getCurrentTime());
         }
     }
   }, [isPlaying, videoElement]);
+
+  const handlePlayPause = useCallback(
+    songIndex => {
+      if (songIndex === selectedIndex) {
+        setIsPlaying(!isPlaying);
+      } else {
+        setSelectedIndex(songIndex);
+        playVideoById(songs[songIndex]);
+        if (!isPlaying) setIsPlaying(true);
+      }
+    }, [songs, selectedIndex, isPlaying]
+  );
+
+  //   const handlePlayPause = useCallback(
+  //   (songIndex) => {
+  //     setIsPlaying((prevIsPlaying) => !prevIsPlaying);
+  
+  //     if (songIndex !== selectedIndex) {
+  //       setSelectedIndex(songIndex);
+  //     } else if (!isPlaying) {
+  //       playVideoById(songs[selectedIndex]);
+  //     }
+  //   },
+  //   [isPlaying, selectedIndex, songs]
+  // );
+
+
+  const playVideoById = (videoId) => {
+    if (videoElement.current) {
+      const player = videoElement.current.loadVideoById(videoId);
+    }
+  }
 
 
   const playNextSong = () => {
     console.log('play next song');
     if (selectedIndex < songs.length - 1 && songs[selectedIndex+1] != null) {
-      setSelectedIndex(selectedIndex + 1);
+      setSelectedIndex(prevIndex => {
+        playVideoById(songs[prevIndex + 1]);
+        return (prevIndex + 1);
+      });
     } else {
       setSelectedIndex(0);
     }
@@ -135,30 +180,68 @@ function Player() {
   const selectSongBox = useCallback(
     (index) => {
       if (editing) {
-        setSelectedIndex(index);
+        setSelectedIndex(prevIndex => {
+          if (prevIndex != index) return index;
+        });
         setModalVisible(true);
       }
     }, [editing]
   )
 
 
-  useEffect(() => {
-    if(isPlaying) {
-      playVideoById(songs[selectedIndex]);
-    }
-  }, [selectedIndex, isPlaying])
+  // useEffect(() => {
+  //   if(isPlaying) {
+  //     playVideoById(songs[selectedIndex]);
+  //   }
+  // }, [selectedIndex, isPlaying])
 
-  const handlePlayPause = (songIndex) => {
-    console.log("The song that should be playing is: ", selectedIndex);
-    if (!isPlaying) {
-      setSelectedIndex(songIndex);
-      setIsPlaying(true);
-    } else if (songIndex == selectedIndex) {
-      setIsPlaying(false);
-    } else {
-      setSelectedIndex(songIndex);
-    }
-  }
+  // const handlePlayPause = (songIndex) => {
+  //   console.log("The song that should be playing is: ", selectedIndex);
+  //   if (!isPlaying) {
+  //     setSelectedIndex(songIndex);
+  //     setIsPlaying(true);
+  //   } else if (songIndex == selectedIndex) {
+  //     setIsPlaying(false);
+  //   } else {
+  //     setSelectedIndex(songIndex);
+  //   }
+  // }
+
+  // const handlePlayPause = useCallback(
+  //   (songIndex) => {
+  //     setIsPlaying(prev => !prev);
+  //     if (selectedIndex != songIndex) {
+  //       setSelectedIndex(songIndex);
+  //     }
+  //   } ,[selectedIndex]
+
+  // )
+
+  // const handlePlayPause = useCallback(
+  //   (songIndex) => {
+  //   if (isPlaying && songIndex === selectedIndex) {
+  //     setIsPlaying(false);
+  //   } else if (songIndex === selectedIndex) {
+  //     setIsPlaying(true);
+  //     videoElement.current.seekTo(timeToStart);
+  //   } else if (isPlaying){
+  //     setSelectedIndex(songIndex);
+  //   } else {
+  //     setIsPlaying(true);
+  //     setSelectedIndex(songIndex);
+  //   }
+  // }, [isPlaying, selectedIndex]
+  // ) 
+
+  // const handlePlayPause = useCallback(
+  //   (songIndex) => {
+  //     if (isPlaying && songIndex === selectedIndex) {
+  //       setIsPlaying(false);
+  //       setTimeToStart(videoElement.current.getCurrentTime());
+
+  //     }
+  //   }
+  // )
 
   // const handlePlayPause = useCallback(
   //   (songIndex) => {
@@ -173,12 +256,16 @@ function Player() {
   //   }, [isPlaying, selectedIndex]
   // )
 
+  // const handlePlayPause = useCallback(
+  //   (songIndex) => {
+  //     setIsPlaying(prev => !prev);
+  //     if (songIndex !== selectedIndex) {
+  //       setSelectedIndex(songIndex);
+  //     }
+  //   }, [isPlaying, selectedIndex]
+  // )
 
-  const playVideoById = (videoId) => {
-    if (videoElement.current) {
-      const player = videoElement.current.loadVideoById(videoId);
-    }
-  }
+
 
 
 
@@ -202,10 +289,13 @@ function Player() {
       <div className='player-container player'>
           <SongBox key={1} handleDelete={removeSong} songId={songs[0]} isPlaying={(selectedIndex==0) && isPlaying} 
             handleClick={() => selectSongBox(0)} onClickPlay={()=>handlePlayPause(0)}/>
+
           <SongBox key={2} handleDelete={removeSong} songId={songs[1]} isPlaying={(selectedIndex==1) && isPlaying}
             handleClick={() => selectSongBox(1)} onClickPlay={()=>handlePlayPause(1)}/>
+
           <SongBox key={3} handleDelete={removeSong} songId={songs[2]} isPlaying={(selectedIndex==2) && isPlaying}
             handleClick={() => selectSongBox(2)} onClickPlay={()=>handlePlayPause(2)}/>
+
           <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />
           <YouTube
             opts={opts}

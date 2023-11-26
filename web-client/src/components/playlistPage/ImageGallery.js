@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faSquarePlus } from '@fortawesome/free-regular-svg-icons';
 import { usePlaylistContext } from '../../pages/PlaylistPage';
@@ -8,6 +8,14 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
     const [images, setImages] = useState(['/images/default.jpg', '/images/congrats.png', '/images/good-luck.png', '/images/happybirthday.jpg']);
     const [uploaded, setUploaded] = useState(null);
     const { playlistId, baseUrl, editing } = usePlaylistContext();
+
+    useEffect(() => {
+        if (selectedImage.startsWith('/uploads-')) {
+            const imageSrc = baseUrl.split('/api')[0]+'/uploads/' + selectedImage;
+            setUploaded(true);
+            setImages(prevImages => [...prevImages, imageSrc]);
+        }
+    }, [selectedImage]);
     
     const handleUploadImage = async (event) => {
         console.log('HEREEEE');
@@ -54,7 +62,10 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
                     alert('Sending image name failed.');
                 }
 
-            } else {
+            }  else if (!imageName.includes('/uploads-')){
+                console.log('====================================');
+                console.log('UPLOAD IMAGE');
+                console.log('====================================');
                 const formData = new FormData();
                 formData.append('image', uploaded);
                 console.log('Form data: ', formData);

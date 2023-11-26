@@ -34,7 +34,12 @@ function Image({imageName}) {
     return (
         <div className="image-container image" >
             <img src={selectedImage} alt='cover image' onClick={handleImageOnClick} />
-            <ImageGallery setIsVisible={setPopUpVisible} selectedImage={selectedImage} isVisible={isPopUpVisible} handleImageSelected={setSelectedImage}/>
+            <ImageGallery 
+                setIsVisible={setPopUpVisible} 
+                selectedImage={selectedImage} 
+                isVisible={isPopUpVisible} 
+                handleImageSelected={setSelectedImage}
+                />
         </div>
     )
 }
