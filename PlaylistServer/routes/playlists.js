@@ -4,7 +4,7 @@ const Playlist = require('../models/Playlist');
 const router = express.Router();
 require('dotenv').config();
 const { playlistUpdateEmitter } = require('./sse');
-const { upload, router : uploadRouter} = require('../middlewares/uploadMiddleware');
+const { upload, router: uploadRouter } = require('../middlewares/uploadMiddleware');
 const { extractPlaylist } = require('../middlewares/playlistIdExtractorMiddleware');
 
 
@@ -13,24 +13,13 @@ router.use('/upload', uploadRouter);
 
 router.get('/scanned/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        // const { entryId } = req.params;
-        // console.log('Entry ID: ', entryId);
-        // const playlist = await Playlist.findById(entryId);
-        // if (!playlist) {
-        //     return res.status(400).json({ error: 'Invalid QR code.'});
-        // }
-
         const { playlist } = req;
-        console.log('====================================');
-        console.log('playlist in req(playlist rout): ', playlist);
-        console.log('Playlist cover image: ', playlist.coverImage);
-        console.log('====================================');
 
         let pageType;
         if (playlist.edited) {
             pageType = "listener";
         } else {
-            pageType = "creator"; 
+            pageType = "creator";
         }
 
         return res.status(200).json({
@@ -46,87 +35,60 @@ router.get('/scanned/:playlistId', extractPlaylist, async (req, res) => {
 
     } catch (error) {
         console.error('Error in scanning route: ', error);
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
 
-
 router.post('/update-songs/:playlistId', extractPlaylist, async (req, res) => {
     try {
-//        const {playlistId} = req.params;
-        const {songs} = req.body;
+        const { songs } = req.body;
         const { playlist } = req;
-
-        console.log('Updated songs: ', songs);
-        console.log('====================================');
-        console.log('Playlist in update songs: ', playlist);
-        console.log('====================================');
-
-        // const playlist = await Playlist.findById(playlistId);
-        // if (!playlist) {
-        //     return res.status(404).json({error: 'Playlist not found'});
-        // }
 
         playlist.songs = songs;
         await playlist.save();
         console.log(`Playlist ${playlist._id} songs has been updated.`)
 
-        res.status(200).json({message: 'Songs saved successfully'});
-                
+        res.status(200).json({ message: 'Songs saved successfully' });
+
     } catch (error) {
         console.error('Error saving songs: ', error);
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
 router.get('/get-songs/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        // const {playlistId} = req.params;
-        // const playlist = await Playlist.findById(playlistId);
-        
-        // if (!playlist) {
-        //     return res.status(404).json({error: 'Playlist not found'});
-        // }
         const { playlist } = req;
-
-
-        return res.status(200).json({songs:playlist.songs});
+        return res.status(200).json({ songs: playlist.songs });
     } catch (error) {
         console.error('Error in scanning route: ', error);
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 })
 
 router.post('/change-name/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        //const {playlistId} = req.params;
-        const {name} = req.body;
+        const { name } = req.body;
         const { playlist } = req;
 
-        // const playlist = await Playlist.findById(playlistId);
-        // if (!playlist) {
-        //     return res.status(404).json({error: 'Playlist not found'});
-        // }
-
-        //console.log(`Playlist ${playlistId} name changed to: ${name}.`);
-        
         playlist.name = name;
         await playlist.save();
         console.log(`Playlist ${playlist._id} name changed to: ${name}.`)
-        res.status(200).json({message: 'The name was changed successfully.'});
+
+        res.status(200).json({ message: 'The name was changed successfully.' });
 
     } catch (error) {
         console.error(('Error changing name: ', error));
-        res.status(500).json({error:'Internal server error'});
+        res.status(500).json({ error: 'Internal server error' });
     }
 })
 
 
-router.post('/upload-image/:playlistId',extractPlaylist, upload.single('image'), async (req, res) => {
-    try{
+router.post('/upload-image/:playlistId', extractPlaylist, upload.single('image'), async (req, res) => {
+    try {
         // const {playlistId} = req.params;
-        
+
         // const playlist = await Playlist.findById(playlistId);
         // if (!playlist) {
         //     return res.status(404).json({error: 'Playlist not found'});
@@ -140,27 +102,20 @@ router.post('/upload-image/:playlistId',extractPlaylist, upload.single('image'),
 
         playlist.coverImage = req.file.filename;
         await playlist.save();
-        res.status(200).json({message: `Playlist ${playlist._id} was changes successfully.`})
+        res.status(200).json({ message: `Playlist ${playlist._id} was changes successfully.` })
         console.log(`Playlist ${playlist._id} image changed to: ${req.file.filename}.`)
 
     } catch (error) {
         console.error(" uploading image: ", error);
-        res.status(500).json({message: 'Internal server error, could not upload the image.'});
+        res.status(500).json({ message: 'Internal server error, could not upload the image.' });
     }
 })
 
 router.post('/select-image/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        //const {playlistId} = req.params;
-        const {imageName} = req.body;
+        const { imageName } = req.body;
         const { playlist } = req;
         console.log('Imagename from request: ', imageName);
-        //console.log('Playlist ID: ', playlistId);
-
-        // const playlist = await Playlist.findById(playlistId);
-        // if (!playlist) {
-        //     return res.status(404).json({error: 'Playlist not found'});
-        // }
 
         if (playlist.coverImage && playlist.coverImage.startsWith('/uploads-')) {
             fs.unlinkSync('public/uploads' + playlist.coverImage);
@@ -170,22 +125,16 @@ router.post('/select-image/:playlistId', extractPlaylist, async (req, res) => {
         await playlist.save();
         console.log(`Playlist ${playlist._id} image changed to: ${imageName}.`)
 
-        res.status(200).json({message: `Playlist's ${playlist._id} has changed successfully.`});
+        res.status(200).json({ message: `Playlist's ${playlist._id} has changed successfully.` });
     } catch (error) {
-        const {playlistId} = req.params;
+        const { playlistId } = req.params;
         console.error(`Error updating image for playlist: ${playlistId}`, error);
-        res.status(500).json({error: `Internal server error: could not change playlist ${playlistId} image successfully.`});
+        res.status(500).json({ error: `Internal server error: could not change playlist ${playlistId} image successfully.` });
     }
 });
 
 router.post('/save/:playlistId', extractPlaylist, async (req, res) => {
     try {
-        // const {playlistId} = req.params;
-        // const playlist = await Playlist.findById(playlistId);
-
-        // if (!playlist) {
-        //     return res.status(404).json({error: 'Playlist not found'});
-        // }
         const { playlist } = req;
 
         playlist.edited = true;
@@ -198,16 +147,14 @@ router.post('/save/:playlistId', extractPlaylist, async (req, res) => {
         };
         playlistUpdateEmitter.emit('playlist_updated', message);
 
-        console.log('====================================');
         console.log(`Playlist ${playlist._id} has been successfully saved and published.`);
-        console.log('====================================');
-        res.status(200).json({message: 'Playlist was saved.'});
+        res.status(200).json({ message: 'Playlist was saved.' });
     } catch (error) {
-        const {playlistId} = req.params;
+        const { playlistId } = req.params;
         console.error('Error saving playlist.', error);
-        res.status(500).json({error: 'Internal server error.'});
+        res.status(500).json({ error: 'Internal server error.' });
     }
-})
+});
 
 
 module.exports = router;

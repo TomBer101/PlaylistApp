@@ -21,10 +21,6 @@ const extractPlaylist = async (req, res, next) => {
     }
 
     req.playlist = playlist;
-    console.log('====================================');
-    console.log("Playlist in request(middleware): ", playlist);
-    console.log('Playlist cover image: ', playlist.coverImage)
-    console.log('====================================');
     next();
   } catch (error) {
     console.error('Error retrieving playlist.', error);
