@@ -86,42 +86,6 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
         }
     }
 
-    // const handleMouseDown = () => {
-    //     if(editing) {
-    //         longPressTimer = setTimeout(() => {
-    //             setShowGarbageIcon(true);
-    //             setLongPressInProgress(true);
-    //         }, 3000);
-    //     }
-    // };
-
-    // const handleMouseUp = () => {
-    //     if (editing) {
-    //         clearTimeout(longPressTimer);
-    //         if (longPressInProgress) {
-    //           // Long press was detected, don't hide the garbage icon
-    //           setLongPressInProgress(false);
-    //         } else {
-    //           // No long press, hide the garbage icon
-    //           setShowGarbageIcon(false);
-    //         }
-    //     }
-    // };
-
-    // const handleGarbageIconClick = () => {
-    //     // Handle the removal of the song from the playlist
-    //     console.log('Want to delete song: ', songId);
-    // };
-
-    // function handleOnClick(e) {
-    //     console.log('handleOnClick');
-    //     if ( isLongPress.current ) {
-    //       console.log('Is long press - not continuing.');
-    //       return;
-    //     }
-    //     setAction('click')
-    //   }
-
     const handleOnMouseUp = () => {
         if(editing) {clearTimeout(timerRef.current); }
     }

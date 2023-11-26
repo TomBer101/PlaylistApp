@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import YouTube, {YouTubePlayer} from 'react-youtube';
+import YouTube, { YouTubePlayer } from 'react-youtube';
 import SongBox from './SongBox';
 import SongSearchModal from '../../components/playlistPage/SongSearchModal';
 import { usePlaylistContext } from '../../pages/PlaylistPage';
@@ -12,33 +12,30 @@ function Player() {
     height: "0",
     width: "0",
     playerVars: {
-      mute:false,
+      mute: false,
     },
   };
 
   const { playlistId, baseUrl, editing } = usePlaylistContext();
-  const [songs, setSongs] = useState([]); 
-  const [isModalVisible, setModalVisible] = useState(false); 
+  const [songs, setSongs] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0); 
-  const [timeToStart, setTimeToStart] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const videoElement = useRef(null);
-
 
   useEffect(() => {
     fetchSongs()
   }, [playlistId])
 
   useEffect(() => {
-    console.log('Current Songs: ', songs);
     if (baseUrl != undefined && playlistId != undefined) {
-    updateSongs();
+      updateSongs();
     }
   }, [songs])
 
-  async function fetchSongs ()  {
+  async function fetchSongs() {
     if (playlistId) {
       try {
         const response = await fetch(baseUrl + '/get-songs/' + playlistId);
@@ -54,32 +51,11 @@ function Player() {
   useEffect(() => {
     if (videoElement.current) {
 
-      const elapsedSeconds = videoElement.current.getCurrentTime();
-      const elapsedMilliseconds = Math.floor(elapsedSeconds * 1000);
-      const ms = elapsedMilliseconds % 10;
-      const min = Math.floor(elapsedMilliseconds / 60000);
-      const seconds = Math.floor(
-        (elapsedMilliseconds - min * 60000) / 1000
-      );
-
-      const formattedCurrentTime = 
-        min.toString().padStart(2, '0') + ':' +
-        seconds.toString().padStart(2, '0') + ':' +
-        ms.toString().padStart(3, '0');
-
-        if (isPlaying) {
-          videoElement.current.playVideo();
-          console.log('playing song:');
-          console.log(videoElement.current.getVideoUrl());
-          console.log(videoElement.current.getCurrentTime());
-          
-        } else {
-          videoElement.current.pauseVideo();
-          console.log('pausing song:');
-
-          console.log(videoElement.current.getVideoUrl());
-          console.log(videoElement.current.getCurrentTime());
-        }
+      if (isPlaying) {
+        videoElement.current.playVideo();
+      } else {
+        videoElement.current.pauseVideo();
+      }
     }
   }, [isPlaying, videoElement]);
 
@@ -95,30 +71,14 @@ function Player() {
     }, [songs, selectedIndex, isPlaying]
   );
 
-  //   const handlePlayPause = useCallback(
-  //   (songIndex) => {
-  //     setIsPlaying((prevIsPlaying) => !prevIsPlaying);
-  
-  //     if (songIndex !== selectedIndex) {
-  //       setSelectedIndex(songIndex);
-  //     } else if (!isPlaying) {
-  //       playVideoById(songs[selectedIndex]);
-  //     }
-  //   },
-  //   [isPlaying, selectedIndex, songs]
-  // );
-
-
   const playVideoById = (videoId) => {
     if (videoElement.current) {
       const player = videoElement.current.loadVideoById(videoId);
     }
   }
 
-
   const playNextSong = () => {
-    console.log('play next song');
-    if (selectedIndex < songs.length - 1 && songs[selectedIndex+1] != null) {
+    if (selectedIndex < songs.length - 1 && songs[selectedIndex + 1] != null) {
       setSelectedIndex(prevIndex => {
         playVideoById(songs[prevIndex + 1]);
         return (prevIndex + 1);
@@ -130,7 +90,7 @@ function Player() {
 
   const onReady = (event) => {
     videoElement.current = event.target;
-    if(isPlaying){
+    if (isPlaying) {
       videoElement.current.unMute();
     }
   }
@@ -142,7 +102,7 @@ function Player() {
         newSongs[selectedIndex] = youtubeId;
         return newSongs;
       });
-    } 
+    }
   }
 
   const updateSongs = async () => {
@@ -153,7 +113,7 @@ function Player() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-  
+
         },
         body: requestBody,
       });
@@ -163,19 +123,12 @@ function Player() {
       }
 
       const responseData = await response.json();
-      console.log(responseData.message); // Log the response message
+      console.log(responseData.message); 
     } catch (error) {
       console.error('Error updating songs: ', error);
     }
   }
 
-  // function selectSongBox(index) {
-  //   if (editing) {
-  //     setSelectedIndex(index);
-  //     setModalVisible(true);
-  //     console.log(`SongBox ${index} was clicked.`);
-  //   }
-  // }
 
   const selectSongBox = useCallback(
     (index) => {
@@ -189,130 +142,41 @@ function Player() {
   )
 
 
-  // useEffect(() => {
-  //   if(isPlaying) {
-  //     playVideoById(songs[selectedIndex]);
-  //   }
-  // }, [selectedIndex, isPlaying])
-
-  // const handlePlayPause = (songIndex) => {
-  //   console.log("The song that should be playing is: ", selectedIndex);
-  //   if (!isPlaying) {
-  //     setSelectedIndex(songIndex);
-  //     setIsPlaying(true);
-  //   } else if (songIndex == selectedIndex) {
-  //     setIsPlaying(false);
-  //   } else {
-  //     setSelectedIndex(songIndex);
-  //   }
-  // }
-
-  // const handlePlayPause = useCallback(
-  //   (songIndex) => {
-  //     setIsPlaying(prev => !prev);
-  //     if (selectedIndex != songIndex) {
-  //       setSelectedIndex(songIndex);
-  //     }
-  //   } ,[selectedIndex]
-
-  // )
-
-  // const handlePlayPause = useCallback(
-  //   (songIndex) => {
-  //   if (isPlaying && songIndex === selectedIndex) {
-  //     setIsPlaying(false);
-  //   } else if (songIndex === selectedIndex) {
-  //     setIsPlaying(true);
-  //     videoElement.current.seekTo(timeToStart);
-  //   } else if (isPlaying){
-  //     setSelectedIndex(songIndex);
-  //   } else {
-  //     setIsPlaying(true);
-  //     setSelectedIndex(songIndex);
-  //   }
-  // }, [isPlaying, selectedIndex]
-  // ) 
-
-  // const handlePlayPause = useCallback(
-  //   (songIndex) => {
-  //     if (isPlaying && songIndex === selectedIndex) {
-  //       setIsPlaying(false);
-  //       setTimeToStart(videoElement.current.getCurrentTime());
-
-  //     }
-  //   }
-  // )
-
-  // const handlePlayPause = useCallback(
-  //   (songIndex) => {
-  //     if (!isPlaying) {
-  //           setSelectedIndex(songIndex);
-  //           setIsPlaying(true);
-  //         } else if (songIndex == selectedIndex) {
-  //           setIsPlaying(false);
-  //         } else {
-  //           setSelectedIndex(songIndex);
-  //         }
-  //   }, [isPlaying, selectedIndex]
-  // )
-
-  // const handlePlayPause = useCallback(
-  //   (songIndex) => {
-  //     setIsPlaying(prev => !prev);
-  //     if (songIndex !== selectedIndex) {
-  //       setSelectedIndex(songIndex);
-  //     }
-  //   }, [isPlaying, selectedIndex]
-  // )
-
-
-
-
-
-  //  function  removeSong (songId)  {
-  //   setSongs(oldSongs => {
-  //     const newSongs = oldSongs.map((song) => {
-  //       if (song === songId) return null;
-  //       return song;
-  //     })
-  //     return newSongs;
-  //   })
-  // }
 
   const removeSong = useCallback(
     (songId) => {
       setSongs(oldSongs => oldSongs.filter(song => song != songId))
-    } ,[songs]
+    }, [songs]
   )
 
-    return(
-      <div className='player-container player'>
-          <SongBox key={1} handleDelete={removeSong} songId={songs[0]} isPlaying={(selectedIndex==0) && isPlaying} 
-            handleClick={() => selectSongBox(0)} onClickPlay={()=>handlePlayPause(0)}/>
+  return (
+    <div className='player-container player'>
+      <SongBox key={1} handleDelete={removeSong} songId={songs[0]} isPlaying={(selectedIndex == 0) && isPlaying}
+        handleClick={() => selectSongBox(0)} onClickPlay={() => handlePlayPause(0)} />
 
-          <SongBox key={2} handleDelete={removeSong} songId={songs[1]} isPlaying={(selectedIndex==1) && isPlaying}
-            handleClick={() => selectSongBox(1)} onClickPlay={()=>handlePlayPause(1)}/>
+      <SongBox key={2} handleDelete={removeSong} songId={songs[1]} isPlaying={(selectedIndex == 1) && isPlaying}
+        handleClick={() => selectSongBox(1)} onClickPlay={() => handlePlayPause(1)} />
 
-          <SongBox key={3} handleDelete={removeSong} songId={songs[2]} isPlaying={(selectedIndex==2) && isPlaying}
-            handleClick={() => selectSongBox(2)} onClickPlay={()=>handlePlayPause(2)}/>
+      <SongBox key={3} handleDelete={removeSong} songId={songs[2]} isPlaying={(selectedIndex == 2) && isPlaying}
+        handleClick={() => selectSongBox(2)} onClickPlay={() => handlePlayPause(2)} />
 
-          <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />
-          <YouTube
-            opts={opts}
-            videoId={songs[selectedIndex]}
-            onReady={onReady}
-            onEnd={playNextSong}
-          />
-      </div>
-  
-    )
+      <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />
+      <YouTube
+        opts={opts}
+        videoId={songs[selectedIndex]}
+        onReady={onReady}
+        onEnd={playNextSong}
+      />
+    </div>
 
-  }
+  )
+
+}
 
 
 export default Player;
 
 
 
-  
+
 

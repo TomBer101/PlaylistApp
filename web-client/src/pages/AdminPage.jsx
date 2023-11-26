@@ -12,9 +12,6 @@ function AdminPage() {
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [createdQR, setCreatedQR] = useState(null);
 
-  console.log('====================================');
-  console.log('Rendering admin page');
-  console.log('====================================');
 
   const setSelectedPlaylistCallback = useCallback(
     (playlist) => {
@@ -30,7 +27,6 @@ const setCreatedQRCallback = useCallback(
   [setCreatedQR]
 );
   
-  console.log('Selected playlist: ', selectedPlaylist);
 
   const adminContextValue = {
     baseUrl: process.env.REACT_APP_SERVER + '/api/admin', 

@@ -7,7 +7,7 @@ import '../../styles/playlistPage/ImageGallery.css';
 function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedImage}) {
     const [images, setImages] = useState(['/images/default.jpg', '/images/congrats.png', '/images/good-luck.png', '/images/happybirthday.jpg']);
     const [uploaded, setUploaded] = useState(null);
-    const { playlistId, baseUrl, editing } = usePlaylistContext();
+    const { playlistId, baseUrl } = usePlaylistContext();
 
     useEffect(() => {
         if (selectedImage.startsWith('/uploads-')) {
@@ -18,7 +18,6 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
     }, [selectedImage]);
     
     const handleUploadImage = async (event) => {
-        console.log('HEREEEE');
         const file = event.target.files[0];
         if (file) {
             if (uploaded != null) {
@@ -33,16 +32,10 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
         }
     }
 
-    const handleImageClick = (imageName) => {
-        handleImageSelected(imageName);
-    }
-
     const closeModal = async (imageName) => {
-        console.log("close modal");
         setIsVisible(false);
         handleImageSelected(imageName);
         if (selectedImage !== null) {
-            console.log('Selected image: ', imageName);
             if (imageName.startsWith('/images')) {
                 try {
                     const response = await fetch(baseUrl + `/select-image/${playlistId}`, {
@@ -53,7 +46,6 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
                         },
                     });
 
-                    console.log("The response: ",response);
                     if (!response.ok) {
                         console.error('Failed sending image name to server');
                     }
@@ -63,9 +55,7 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
                 }
 
             }  else if (!imageName.includes('/uploads-')){
-                console.log('====================================');
-                console.log('UPLOAD IMAGE');
-                console.log('====================================');
+
                 const formData = new FormData();
                 formData.append('image', uploaded);
                 console.log('Form data: ', formData);

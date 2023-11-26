@@ -16,8 +16,6 @@ function Title({name}) {
     }
 
     async function saveName () {
-        console.log("Sending request to save the name: ", inputText);
-        console.log('jsonf: ', JSON.stringify({name: inputText}));
         try{
             console.log(baseUrl);
             const response = await fetch(baseUrl + `/change-name/${playlistId}`, {

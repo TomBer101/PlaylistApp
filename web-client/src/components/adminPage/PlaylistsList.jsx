@@ -7,11 +7,6 @@ function PlaylistsList({setCreatedQR, setSelectedPlaylist}) {
     const {baseUrl, selectedPlaylist, createdQR} = useAdminContext();
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [eventSource, setEventSource] = useState(null);
-
-    console.log('====================================');
-    console.log('Rendering playlists list');
-    console.log('====================================');
 
     useEffect(() => {
         fetchAllPlaylists();
@@ -22,15 +17,12 @@ function PlaylistsList({setCreatedQR, setSelectedPlaylist}) {
             const newEventSource = new EventSource(process.env.REACT_APP_SERVER + '/api/sse/playlistsupdates');
             newEventSource.addEventListener('message', event => {
                 const data = JSON.parse(event.data);
-                console.log('data recieved fro sse: ', data);
                 if (data.type === 'update') {
                         setPlaylists(current => [...current, data.playlistData]);
-                        console.log('created qr: ', createdQR);
                         if (createdQR && data.playlistData._id === createdQR.id) {
                             console.log('New playlist: ', data.playlistData._id, 'My playlist: ', createdQR.id);
                             setCreatedQR(null);
-                        }
-                    
+                        }                    
                 }
             });
 

@@ -6,13 +6,9 @@ import '../../styles/playlistPage/Image.css';
 const imagePath = "/images/default.jpg"
 
 function Image({imageName}) {
-    const { playlistId, baseUrl, editing, ip} = usePlaylistContext();
+    const { baseUrl, editing, ip} = usePlaylistContext();
     const [isPopUpVisible, setPopUpVisible] = useState(false);
     const [selectedImage, setSelectedImage] = useState(imageName || '');
-
-    console.log('====================================');
-    console.log('Rendering Image');
-    console.log('====================================');
 
     useEffect(() => {
         if (selectedImage.startsWith('/uploads-')) {

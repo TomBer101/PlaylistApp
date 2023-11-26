@@ -14,17 +14,14 @@ export const usePlaylistContext = () => {
 function PlaylistPage() {
     const [playlistData, setPLaylistData] = useState(null);
     const [context, setContext] = useState(false);
-    const location = useLocation();
 
     useEffect(() => {
       const searchParams = new URLSearchParams(window.location.search);
-      console.log('search params: ', searchParams);
       const playlistIdParam = searchParams.get('playlistId'); 
-      console.log(' playlistIdParam: ', playlistIdParam);
 
       if (playlistIdParam) {
         console.log('playlist id: ', playlistIdParam);
-          const base = `http://localhost:3030/api/playlists`;
+          const base = process.env.REACT_APP_SERVER + `/api/playlists`;
           fetchPlaylistData(base, playlistIdParam);
       }
   }, []);
@@ -47,7 +44,6 @@ function PlaylistPage() {
         playlistId: playlistData? playlistData.id : null,
         baseUrl: playlistData?playlistData.base: null,
         editing: (playlistData && playlistData.pageType === 'creator'),
-        ip: new URLSearchParams(window.location.search).get('ip'),
     };
 
     setContext(playlistContextValue);
@@ -55,7 +51,6 @@ function PlaylistPage() {
 
 
     const savePlaylist = async () => {
-      console.log('try to save');
       try {
         const response = await fetch(context.baseUrl + '/save/' + context.playlistId, {
           method: 'POST',
@@ -68,7 +63,6 @@ function PlaylistPage() {
       }
     }
 
-    console.log('playlist context: ', context);
 
   return (
     <PlaylistContext.Provider value={context}>
