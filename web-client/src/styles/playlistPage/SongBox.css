@@ -1,11 +1,3 @@
-/* .song-container {
- background-color: aqua;
- display: flex;
- flex-direction: row;
- align-items: center;
- width: 50%;
-} */
-
 .image-thumbnail {
     margin: 0 auto;
     overflow: hidden;
@@ -19,26 +11,7 @@
     gap: 5px;
     overflow: hidden;
     justify-content: flex-end;
-    /* text-overflow: ellipsis; */
   }
-
-  /* @keyframes scroll {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-100);
-    }
-  } */
-
-  /* .scrolling .song-title {
-    animation: scroll 10s linear infinite;
-    animation-play-state: paused;
-  }
-
-  .scrolling .song-title.expamded {
-    animation-play-state: running;
-  } */
 
 
 .image-thumbnail img {
@@ -49,8 +22,8 @@
 }
 
 .empty-title-underline {
-    border-bottom: 1px solid #000; /* Customize the underline style */
-    width: 90%; /* Adjust the width as needed */
+    border-bottom: 1px solid #000; 
+    width: 90%; 
     justify-self: end;
     color: #959494;
     align-self: center;
@@ -102,15 +75,6 @@
     animation: scrollTitle 15s linear infinite;
     animation-play-state: paused;
     color: white
-    /* animation: scrollTitle 10s linear infinite ; */
-    /* flex:1;
-    font-size: 14px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    background-color: blueviolet; */
-
-    /* animation: scrollTitle 20s linear infinite infinite; */
 }
 
 .song-details .song-title.expanded {
@@ -180,34 +144,31 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* Cover the entire song box horizontally */
-    height: 100%; /* Cover the entire song box vertically */
-    background-color: rgba(241, 50, 50, 0.7); /* Semi-transparent red background */
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(241, 50, 50, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1; /* Place it above the song box content */
-    cursor: pointer; /* Add a pointer cursor for click interaction */
+    z-index: 1; 
+    cursor: pointer;
   }
 
   .garbage-icon * {
-    color: white; /* White color for the icon */
-    font-size: 24px; /* Adjust the icon size */
-    top: 0; /* Position at the top of the container */
-    right: 0; /* Position at the right of the container */
+    color: white; 
+    font-size: 24px; 
+    top: 0; 
+    right: 0; 
   }
 
   .with-garbage {
-    /* Add your styles for the "with-garbage" state here */
-    /* For example, you can change the background color or add a border */
     background-color: lightgray;
     border: 1px solid black;
-    /* You can adjust these styles to fit your design preferences */
   }
 
   .song-box-container {
-    position: relative; /* Make it a positioning context */
-    display: inline-block; /* Display as inline block to fit its content */
+    position: relative; 
+    display: inline-block; 
     width: 95%;
   }
   

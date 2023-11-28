@@ -4,13 +4,13 @@ import '../../styles/adminPage/PlaylistsList.css';
 import PlaylistBlock from "../adminPage/PlaylistBlock";
 
 function PlaylistsList({setCreatedQR, setSelectedPlaylist}) {
-    const {baseUrl, selectedPlaylist, createdQR} = useAdminContext();
+    const {baseUrl, createdQR} = useAdminContext();
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchAllPlaylists();
-    }, []);
+    }, [baseUrl]);
 
     
     useEffect(() => {
@@ -29,7 +29,7 @@ function PlaylistsList({setCreatedQR, setSelectedPlaylist}) {
             return () => {
                 newEventSource.close();
             };
-    }, [createdQR])
+    }, [createdQR, setCreatedQR])
 
     const fetchAllPlaylists = () => {
         fetch(`${baseUrl}/showplaylists`)

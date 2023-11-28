@@ -8,12 +8,19 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://trackcard.oa.r.appspot.com/","https://trackcard.oa.r.appspot.com/", "http://localhost:3000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     allowedHeaders: 'access-control-allow-origin,content-type',
 }));
 
+// const corsOptions = {
+//     origin: 'https://trackcard.oa.r.appspot.com',
+//     optionsSuccessStatus: 200,
+//   };
+//   app.use(cors(corsOptions));
+
+// app.use(cors());
 
 app.use(express.urlencoded({extended:false}))
 app.use(express.json());

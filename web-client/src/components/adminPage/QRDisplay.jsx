@@ -21,7 +21,7 @@ function QRDisplay({setCreatedQR, setSelectedPlaylist}) {
             if (prevColor === colors.length - 1) return 0;
             return (prevColor + 1);
         });
-    }, [selectedPlaylist, createdQR]);
+    }, [selectedPlaylist, createdQR, colors.length]);
 
 
 
@@ -70,7 +70,7 @@ function QRDisplay({setCreatedQR, setSelectedPlaylist}) {
     
     return (
         <div className="qr-container" style={ borderStyle} >
-                <h2 >{selectedPlaylist && selectedPlaylist.name != ''?selectedPlaylist.name: ' '}</h2>
+                <h2 >{selectedPlaylist && selectedPlaylist.name !== ''?selectedPlaylist.name: ' '}</h2>
 
             <div className="qr-code" >
                 {qrCode? <img src={qrCode} alt='QR code'/> : 'No QR code generated'}

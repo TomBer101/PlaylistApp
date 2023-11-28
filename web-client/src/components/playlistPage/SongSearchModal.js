@@ -22,7 +22,7 @@ function SongSearchModal ({setIsVisible, isVisible, songIndex, handleSongChosing
 
     async function searchSong (songName) {
         console.log('song name: ',songName);
-        if (songName != ""){
+        if (songName !== ""){
             try {
             const response =  await fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&type=video&part=snippet&q=${songName}&maxResults=20` );
 
@@ -73,7 +73,7 @@ function SongSearchModal ({setIsVisible, isVisible, songIndex, handleSongChosing
                     <input type='text' value={inputText} onChange={handleChange}/>
                     <i className="fa-solid fa-magnifying-glass" onClick={() => searchSong(inputText)}/>
                 </div>
-                {searchResult.length != 0 && 
+                {searchResult.length !== 0 && 
                 <div className='list-container' >
                     <ul>
                         {searchResult.map((result) => (

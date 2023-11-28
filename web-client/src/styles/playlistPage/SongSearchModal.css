@@ -63,7 +63,7 @@
 
 
 .input-container i {
-    width: 12%; /* Adjust the width of the icon container */
+    width: 12%;
     display: flex;
     justify-content: center;
     align-items: center;

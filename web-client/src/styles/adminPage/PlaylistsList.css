@@ -28,16 +28,16 @@
 }
 
 .list::-webkit-scrollbar {
-    width: 12px;               /* width of the entire scrollbar */
+    width: 12px;               
   }
   
   .list::-webkit-scrollbar-track {
     background:#dee2e6;  
-    border-radius: 25px;       /* color of the tracking area */
+    border-radius: 25px;       
   }
   
   .list::-webkit-scrollbar-thumb {
-    background-color: rgb(90, 145, 147);    /* color of the scroll thumb */
-    border-radius: 25px;       /* roundness of the scroll thumb */
-    border: 3px solid rgb(90, 145, 147);  /* creates padding around scroll thumb */
+    background-color: rgb(90, 145, 147);    
+    border-radius: 25px;       
+    border: 3px solid rgb(90, 145, 147);  
   }

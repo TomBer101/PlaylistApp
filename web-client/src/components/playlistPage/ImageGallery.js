@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark, faSquarePlus } from '@fortawesome/free-regular-svg-icons';
+import {  faSquarePlus } from '@fortawesome/free-regular-svg-icons';
 import { usePlaylistContext } from '../../pages/PlaylistPage';
 import '../../styles/playlistPage/ImageGallery.css';
 
@@ -15,7 +15,7 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
             setUploaded(true);
             setImages(prevImages => [...prevImages, imageSrc]);
         }
-    }, [selectedImage]);
+    }, [selectedImage, baseUrl]);
     
     const handleUploadImage = async (event) => {
         const file = event.target.files[0];

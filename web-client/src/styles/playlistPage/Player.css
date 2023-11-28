@@ -20,11 +20,10 @@
   align-items: center;
   max-width: 78vh;
   flex: 0;
-  flex-shrink: 1; /* Allow the player to shrink if necessary */
+  flex-shrink: 1; 
 
 }
 
-/* CSS */
 
 
 

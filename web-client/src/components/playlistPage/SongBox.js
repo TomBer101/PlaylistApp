@@ -36,7 +36,7 @@ function SongBox({songId, inSearch, handleClick, isPlaying, onClickPlay, handleD
             }
         }
 
-      }, [songTitle]);
+      }, [songTitle, songId]);
 
 
     useEffect(() => {

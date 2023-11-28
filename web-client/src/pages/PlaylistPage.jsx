@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 import Title from '../components/playlistPage/Title';
 import Image from '../components/playlistPage/Image';
 import Player  from '../components/playlistPage/Player';

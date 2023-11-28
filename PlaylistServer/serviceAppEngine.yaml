@@ -1,0 +1,4 @@
+runtime: nodejs16
+service: server
+env_variables:
+  CONNECTION_STRING : "mongodb+srv://tomerm1233:tomBer1233@cluster0.nhspiky.mongodb.net/PlaylistsApp"

@@ -30,10 +30,10 @@ function Player() {
   }, [playlistId])
 
   useEffect(() => {
-    if (baseUrl != undefined && playlistId != undefined) {
+    if (baseUrl !== undefined && playlistId !== undefined) {
       updateSongs();
     }
-  }, [songs])
+  }, [songs, baseUrl, playlistId])
 
   async function fetchSongs() {
     if (playlistId) {
@@ -151,13 +151,13 @@ function Player() {
 
   return (
     <div className='player-container player'>
-      <SongBox key={1} handleDelete={removeSong} songId={songs[0]} isPlaying={(selectedIndex == 0) && isPlaying}
+      <SongBox key={1} handleDelete={removeSong} songId={songs[0]} isPlaying={(selectedIndex === 0) && isPlaying}
         handleClick={() => selectSongBox(0)} onClickPlay={() => handlePlayPause(0)} />
 
-      <SongBox key={2} handleDelete={removeSong} songId={songs[1]} isPlaying={(selectedIndex == 1) && isPlaying}
+      <SongBox key={2} handleDelete={removeSong} songId={songs[1]} isPlaying={(selectedIndex === 1) && isPlaying}
         handleClick={() => selectSongBox(1)} onClickPlay={() => handlePlayPause(1)} />
 
-      <SongBox key={3} handleDelete={removeSong} songId={songs[2]} isPlaying={(selectedIndex == 2) && isPlaying}
+      <SongBox key={3} handleDelete={removeSong} songId={songs[2]} isPlaying={(selectedIndex === 2) && isPlaying}
         handleClick={() => selectSongBox(2)} onClickPlay={() => handlePlayPause(2)} />
 
       <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />
