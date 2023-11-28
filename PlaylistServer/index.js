@@ -8,7 +8,7 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors({
-    origin: ["http://trackcard.oa.r.appspot.com/","https://trackcard.oa.r.appspot.com/", "http://localhost:3000"],
+    origin: ["http://trackcard.oa.r.appspot.com/","https://trackcard.oa.r.appspot.com/", "http://localhost:3000", "https://rad-pony-74f358.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     allowedHeaders: 'access-control-allow-origin,content-type',
