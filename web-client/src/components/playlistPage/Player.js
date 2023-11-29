@@ -9,8 +9,8 @@ import '../../styles/playlistPage/Player.css';
 function Player() {
 
   const opts = {
-    height: "0",
-    width: "0",
+    height: "300",
+    width: "300",
     playerVars: {
       mute: false,
     },
@@ -119,9 +119,7 @@ function Player() {
 
   const onReady = (event) => {
     videoElement.current = event.target;
-    if (isPlaying) {
-      videoElement.current.unMute();
-    }
+    event.target.playVideo();
   }
 
   const handleChoosingSong = (youtubeId) => {
@@ -168,7 +166,6 @@ function Player() {
       <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />
       <YouTube
         opts={opts}
-        videoId={songs[selectedIndex]}
         onReady={onReady}
         onEnd={playNextSong}
       />
