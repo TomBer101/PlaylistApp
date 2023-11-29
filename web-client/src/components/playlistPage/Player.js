@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import YouTube, { YouTubePlayer } from 'react-youtube';
 import SongBox from './SongBox';
-import SongSearchModal from '../../components/playlistPage/SongSearchModal';
+import SongSearchModal from './SongSearchModal';
 import { usePlaylistContext } from '../../pages/PlaylistPage';
 import '../../styles/playlistPage/Player.css';
 
@@ -17,7 +17,7 @@ function Player() {
   };
 
   const { playlistId, baseUrl, editing } = usePlaylistContext();
-  const [songs, setSongs] = useState([]);
+  const [songs, setSongs] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -26,26 +26,55 @@ function Player() {
   const videoElement = useRef(null);
 
   useEffect(() => {
+
+    async function fetchSongs() {
+      if (playlistId) {
+        try {
+          const response = await fetch(baseUrl + '/get-songs/' + playlistId);
+          const data = await response.json();
+          setSongs(data.songs);
+        } catch (error) {
+          console.error('Error fetching songs: ', error);
+        }
+      }
+    }
+
     fetchSongs()
   }, [playlistId])
 
   useEffect(() => {
-    if (baseUrl !== undefined && playlistId !== undefined) {
+    const updateSongs = async () => {
+        try {
+          const requestBody = JSON.stringify({ songs });
+    
+          const response = await fetch(`${baseUrl}/update-songs/${playlistId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+    
+            },
+            body: requestBody,
+          });
+          console.log('current songs: ', songs);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const responseData = await response.json();
+          console.log(responseData.message); 
+        } catch (error) {
+          console.error('Error updating songs: ', error);
+        }
+      
+  
+    }
+
+    if (baseUrl !== undefined && playlistId !== undefined && songs !== null) {
       updateSongs();
     }
   }, [songs, baseUrl, playlistId])
 
-  async function fetchSongs() {
-    if (playlistId) {
-      try {
-        const response = await fetch(baseUrl + '/get-songs/' + playlistId);
-        const data = await response.json();
-        setSongs(data.songs);
-      } catch (error) {
-        console.error('Error fetching songs: ', error);
-      }
-    }
-  }
+
 
 
   useEffect(() => {
@@ -105,30 +134,6 @@ function Player() {
     }
   }
 
-  const updateSongs = async () => {
-    try {
-      const requestBody = JSON.stringify({ songs });
-
-      const response = await fetch(`${baseUrl}/update-songs/${playlistId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-
-        },
-        body: requestBody,
-      });
-      console.log('current songs: ', songs);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      console.log(responseData.message); 
-    } catch (error) {
-      console.error('Error updating songs: ', error);
-    }
-  }
-
 
   const selectSongBox = useCallback(
     (index) => {
@@ -149,7 +154,7 @@ function Player() {
     }, [songs]
   )
 
-  return (
+  return ( songs &&
     <div className='player-container player'>
       <SongBox key={1} handleDelete={removeSong} songId={songs[0]} isPlaying={(selectedIndex === 0) && isPlaying}
         handleClick={() => selectSongBox(0)} onClickPlay={() => handlePlayPause(0)} />

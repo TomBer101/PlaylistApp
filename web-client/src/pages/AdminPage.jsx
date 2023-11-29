@@ -39,7 +39,8 @@ const setCreatedQRCallback = useCallback(
       <div className="admin-page">
         <div className="title">
           <h1 >Welcome</h1>
-          <h5>Welcome to the admin page. Here you can generate QR code, and text my app.</h5>
+          <h5>Here you can generate a QR code, as if it was a greeting card. </h5>
+          <h5>Generate - Scan - Edit - Send</h5>
         </div>
 
         <PlaylistsList 
