@@ -9,8 +9,8 @@ import '../../styles/playlistPage/Player.css';
 function Player() {
 
   const opts = {
-    height: "200",
-    width: "200",
+    height: "0",
+    width: "0",
     playerVars: {
       mute: false,
     },
@@ -117,7 +117,7 @@ function Player() {
   const onReady = (event) => {
     videoElement.current = event.target;
     const iframe = event.target.getIframe();
-    iframe.setAttribute('origin', 'https://rad-pony-74f358.netlify.app/');
+    iframe.setAttribute('origin', 'https://rad-pony-74f358.netlify.app');
     event.target.playVideo();
   }
 
