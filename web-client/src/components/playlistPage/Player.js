@@ -9,8 +9,8 @@ import '../../styles/playlistPage/Player.css';
 function Player() {
 
   const opts = {
-    height: "300",
-    width: "300",
+    height: "0",
+    width: "0",
     playerVars: {
       mute: false,
     },
@@ -51,7 +51,6 @@ function Player() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-    
             },
             body: requestBody,
           });
@@ -65,8 +64,6 @@ function Player() {
         } catch (error) {
           console.error('Error updating songs: ', error);
         }
-      
-  
     }
 
     if (baseUrl !== undefined && playlistId !== undefined && songs !== null) {
