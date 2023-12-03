@@ -16,6 +16,7 @@ function PlaylistsList({setCreatedQR, setSelectedPlaylist}) {
     useEffect(() => {
             const newEventSource = new EventSource(process.env.REACT_APP_SERVER + '/api/sse/playlistsupdates');
             newEventSource.addEventListener('message', event => {
+                console.log('SSE Message received:', event);
                 const data = JSON.parse(event.data);
                 if (data.type === 'update') {
                         setPlaylists(current => [...current, data.playlistData]);
