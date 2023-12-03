@@ -18,6 +18,19 @@
     min-height: 0;
 }
 
+/* Styles for smaller screens */
+@media (max-width: 768px) {
+    .admin-page {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: 
+            "title title"
+            "display display"
+            "list list"
+            ". ."
+        ;
+    }
+}
+
 .title {
     grid-area: title;
     margin-top: 1rem;
