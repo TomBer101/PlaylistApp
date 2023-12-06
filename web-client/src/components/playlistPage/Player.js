@@ -75,15 +75,17 @@ function Player() {
 
 
   useEffect(() => {
+    console.log('====================================');
+    console.log("current vid el: ", videoElement.current);
+    console.log('====================================');
     if (videoElement.current) {
-
       if (isPlaying) {
         videoElement.current.playVideo();
       } else {
         videoElement.current.pauseVideo();
       }
     }
-  }, [isPlaying, videoElement]);
+  }, [isPlaying, videoElement.current]);
 
   const handlePlayPause = useCallback(
     songIndex => {
@@ -100,6 +102,9 @@ function Player() {
   const playVideoById = (videoId) => {
     if (videoElement.current) {
       const player = videoElement.current.loadVideoById(videoId);
+      console.log('====================================');
+      console.log("current player: ", player);
+      console.log('====================================');
     }
   }
 
@@ -116,9 +121,9 @@ function Player() {
 
   const onReady = (event) => {
     videoElement.current = event.target;
-    const iframe = event.target.getIframe();
-    iframe.setAttribute('origin', 'https://rad-pony-74f358.netlify.app');
-    event.target.playVideo();
+    if (isPlaying) {
+      videoElement.current.playVideo();
+    }
   }
 
   const handleChoosingSong = (youtubeId) => {
