@@ -11,7 +11,7 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
 
     useEffect(() => {
         if (selectedImage.startsWith('/uploads-')) {
-            const imageSrc = baseUrl.split('/api')[0]+'/uploads/' + selectedImage;
+            const imageSrc = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/${selectedImage}`;
             setUploaded(true);
             setImages(prevImages => [...prevImages, imageSrc]);
         }
@@ -88,7 +88,8 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
                                 <img key={index}  src={image} alt={`Image ${index}`} />
                             </div>
                         ))}
-                        <label className='thumbnail' style={{width:'100%'}} > 
+                        {process.env.ALLOW_IMAGE_UPLOAD === "true" && 
+                            <label className='thumbnail' style={{width:'100%'}} > 
                             <FontAwesomeIcon icon={faSquarePlus} style={{height: '2rem'}}/>
                             <input 
                                 type='file'
@@ -98,7 +99,7 @@ function ImageGallery ({setIsVisible, isVisible, handleImageSelected, selectedIm
                                 accept='image/*'
                                 onChange={handleUploadImage}
                             />
-                        </label>
+                        </label>}
                     </div>
 
                 </div>
