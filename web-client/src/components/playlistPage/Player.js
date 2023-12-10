@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import YouTube, { YouTubePlayer } from 'react-youtube';
 import SongBox from './SongBox';
 import SongSearchModal from './SongSearchModal';
+import YouTubeEmbed from '../playlistPage/YouTubeEmbed';
 import { usePlaylistContext } from '../../pages/PlaylistPage';
 import '../../styles/playlistPage/Player.css';
 
@@ -9,8 +10,8 @@ import '../../styles/playlistPage/Player.css';
 function Player() {
 
   const opts = {
-    height: "0",
-    width: "0",
+    height: "300",
+    width: "300",
     playerVars: {
       mute: false,
     },
@@ -32,6 +33,7 @@ function Player() {
         try {
           const response = await fetch(baseUrl + '/get-songs/' + playlistId);
           const data = await response.json();
+          console.log('fetched songs: ', data.songs);
           setSongs(data.songs);
         } catch (error) {
           console.error('Error fetching songs: ', error);
@@ -40,6 +42,7 @@ function Player() {
     }
 
     fetchSongs()
+    console.log("SONGSSSS: ", songs);
   }, [playlistId])
 
   useEffect(() => {
@@ -75,10 +78,8 @@ function Player() {
 
 
   useEffect(() => {
-    console.log('====================================');
-    console.log("current vid el: ", videoElement.current);
-    console.log('====================================');
     if (videoElement.current) {
+      console.log("in play pause song useEffect. current player is: ", videoElement.current);
       if (isPlaying) {
         videoElement.current.playVideo();
       } else {
@@ -88,23 +89,36 @@ function Player() {
   }, [isPlaying, videoElement.current]);
 
   const handlePlayPause = useCallback(
-    songIndex => {
-      if (songIndex === selectedIndex) {
-        setIsPlaying(!isPlaying);
-      } else {
+     songIndex => {
+      console.log(" ***** in pause play ****");
+      if (songIndex !== selectedIndex) {
+        if (videoElement.current) {
+          videoElement.current.pauseVideo();
+        }
         setSelectedIndex(songIndex);
+        console.log('Songs: ', songs);
         playVideoById(songs[songIndex]);
-        if (!isPlaying) setIsPlaying(true);
+        setIsPlaying(true);
+      } else {
+        setIsPlaying(!isPlaying);
+        // setIsPlaying(prev => {
+        //   if (prev === false) return true;
+        // })
+        //setSelectedIndex(songIndex);
+        //if (!isPlaying) setIsPlaying(true);
+        //console.log("Is playing in handlepauseplay: ", isPlaying);
+        //playVideoById(songs[songIndex]);
       }
-    }, [songs, selectedIndex, isPlaying]
+    }, [songs, selectedIndex, isPlaying, videoElement.current]
   );
 
-  const playVideoById = (videoId) => {
+  const playVideoById =  (videoId) => {
     if (videoElement.current) {
       const player = videoElement.current.loadVideoById(videoId);
-      console.log('====================================');
-      console.log("current player: ", player);
-      console.log('====================================');
+      if (isPlaying) {
+        console.log("HERE");
+         videoElement.current.playVideo();
+      }
     }
   }
 
@@ -120,8 +134,16 @@ function Player() {
   };
 
   const onReady = (event) => {
+    console.log('====================================');
+    console.log("in on ready. is playing: ", isPlaying);
+    console.log("current element before: ", videoElement.current);
+    console.log('====================================');
     videoElement.current = event.target;
+    videoElement.current.loadVideoById(songs[0]);
+    console.log("current element after: ", videoElement.current);
+
     if (isPlaying) {
+      console.log("Current video in the element is: ", videoElement.current.videoTitle);
       videoElement.current.playVideo();
     }
   }
@@ -172,6 +194,8 @@ function Player() {
         opts={opts}
         onReady={onReady}
         onEnd={playNextSong}
+        
+      
       />
     </div>
 
