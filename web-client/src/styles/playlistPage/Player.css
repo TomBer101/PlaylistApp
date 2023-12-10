@@ -15,7 +15,7 @@
 .player {
   width: 100%;
   height: 100%;
-  gap: 4vh;  
+  gap: 12px;  
 
   display: flex;
   flex-direction: column;
