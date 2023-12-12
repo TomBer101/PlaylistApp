@@ -21,7 +21,7 @@ Sound Card is a project that brings a unique twist to traditional greeting cards
 
 ## Usage
 
-1. Access the main web app on your computer or laptop (or another device, as long as you can use your phone to scan) by [clickig here](https://rad-pony-74f358.netlify.app/)
+1. Access the main web app on your computer or laptop (or another device, as long as you can use your phone to scan) by [clicking here](https://rad-pony-74f358.netlify.app/)
 2. Use the admin page to generate QR codes for your greeting card.
 3. Scan the QR code with your mobile device to access and edit the personalized message and soundtrack.
 
