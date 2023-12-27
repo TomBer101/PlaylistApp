@@ -4,7 +4,7 @@
 
 ## Overview
 
-Sound Card is a project that brings a unique twist to traditional greeting cards. It allows users to compose a heartfelt message and pair it with a specially curated soundtrack. The recipient can then scan the QR code on the card using their mobile device to enjoy the personalized message and music.
+Sound Card is a project that brings a twist to traditional greeting cards. It allows users to compose a heartfelt message and pair it with a specially curated soundtrack. The recipient can then scan the QR code on the card using their mobile device to enjoy the personalized message and music.
 
 ### Features
 
@@ -14,7 +14,7 @@ Sound Card is a project that brings a unique twist to traditional greeting cards
 
 ## Tech Stack
 
-* **Server**: Developed using Node.js for a robust and efficient backend.
+* **Server**: Developed using Node.js for an efficient backend.
 * **Client**: Built with React for a dynamic and responsive user interface.
 * **Database**: MongoDB stores the necessary data to ensure a smooth user experience.
 * **API**: Leverages the power of YouTube Data API for an extensive library of songs.
