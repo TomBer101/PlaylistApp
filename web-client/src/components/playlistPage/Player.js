@@ -22,7 +22,9 @@ function Player() {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-
+console.log('====================================');
+console.log(`Selected indexs is: ${selectedIndex}`);
+console.log('====================================');
   const videoElement = useRef(null);
 
   useEffect(() => {
@@ -129,7 +131,7 @@ function Player() {
   }
 
   const handleChoosingSong = (youtubeId) => {
-    if (selectedIndex !== -1) {
+    if (selectedIndex !== undefined && selectedIndex !== -1) {
       setSongs((oldSongs) => {
         const newSongs = [...oldSongs];
         newSongs[selectedIndex] = youtubeId;
@@ -142,9 +144,7 @@ function Player() {
   const selectSongBox = useCallback(
     (index) => {
       if (editing) {
-        setSelectedIndex(prevIndex => {
-          if (prevIndex != index) return index;
-        });
+        setSelectedIndex(index);
         setModalVisible(true);
       }
     }, [editing]
@@ -169,8 +169,7 @@ function Player() {
       <SongBox key={3} handleDelete={removeSong} songId={songs[2]} isPlaying={(selectedIndex === 2) && isPlaying}
         handleClick={() => selectSongBox(2)} onClickPlay={() => handlePlayPause(2)} />
 
-      <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />
-      <YouTube
+      { <SongSearchModal isVisible={isModalVisible} setIsVisible={setModalVisible} handleSongChosing={handleChoosingSong} />}      <YouTube
         opts={opts}
         onReady={onReady}
         onEnd={playNextSong}
